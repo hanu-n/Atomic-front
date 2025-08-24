@@ -1,0 +1,347 @@
+/* ======= General ======= */
+body {
+  overflow-x: hidden;
+  margin: 0;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #f8f9fa;
+}
+
+#logo {
+  display: inline-block;
+  animation: rotate 1s linear 1 forwards;
+  transition: transform 0.3s ease-in-out;
+  background: transparent;
+}
+#logo:hover {
+  transform: scale(1.1);
+}
+@keyframes rotate {
+  from { transform: rotateY(0deg); }
+  to { transform: rotateY(360deg); }
+}
+
+/* ======= Top Header ======= */
+.top-header {
+  background-color: #d8ecd8;
+  color: black;
+  padding: 8px 0;
+  font-size: 10px;
+  width: 100%;
+  z-index: 1000;
+   
+}
+.top-header .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+   
+}
+.top-header .contact-info a {
+  margin-right: 18px;
+  color: #333;
+  font-size: 14px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.top-header .contact-info a:last-child {
+  margin-right: 0;
+}
+.top-header .nav-icons {
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.top-header .nav-icons .fa-cart-shopping {
+  color: #222;
+}
+.top-header .nav-icons .fa-user {
+  color: #222;
+}
+
+
+/* ======= Search Box ======= */
+.search-box {
+  background: #fff;
+  border-radius: 30px;
+  padding: 4px 18px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: 350px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.search-box input {
+  border: none;
+  outline: none;
+  flex-grow: 1;
+  font-size: 1rem;
+  background: transparent;
+  padding: 5px 5px;
+  
+}
+
+.search-box i {
+  font-size: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.search-box .fa-bars {
+  color: #b0b0b0;
+}
+
+.search-box .fa-search {
+  color: #198754;
+  cursor: pointer;
+}
+
+/* ======= Cart Count Badge ======= */
+.cart-count {
+  display: inline-block;
+  padding: 2px 6px;
+  background-color: red;
+  color: white;
+  font-size: 0.75rem;
+  border-radius: 50%;
+  position: absolute;
+  top: -7px;
+  right: -10px;
+  min-width: 18px;
+  min-height: 18px;
+  text-align: center;
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+/* ======= Navbar ======= */
+.navbar {
+  background-color: #f0fff0 !important;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+  margin-bottom: 0;
+}
+.navbar .navbar-brand img {
+  margin-right: 10px;
+}
+.navbar-nav {
+  align-items: center;
+}
+.navbar-nav .nav-link {
+  color: #222 !important;
+  font-size: 0.8rem;
+  font-weight: 500;
+
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-bottom 0.2s;
+}
+.navbar-nav .nav-link.active, .navbar-nav .nav-link:focus, .navbar-nav .nav-link:hover {
+  border-bottom: 2px solid #4caf50;
+  color: #126c16 !important;
+  background: none;
+}
+
+/* Dropdown menu tweaks */
+.dropdown-menu {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  font-size: 0.98rem;
+}
+.dropdown-item:active, .dropdown-item:focus, .dropdown-item:hover {
+  background: #e6f9e6;
+  color: #126c16;
+}
+.user-dropdown .dropdown-item {
+  padding: 5px 10px;
+  cursor: pointer;
+  text-align: left;
+ 
+}
+.user-dropdown .dropdown-item:hover {
+  background-color: #f0f0f0;
+}
+.products-section {
+  padding: 60px 20px;
+  background: #f8f9fa;
+  text-align: center;
+}
+
+.section-title {
+  font-size: 2.5em;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #000;
+}
+
+.section-subtitle {
+  font-size: 1.1em;
+  color: #555;
+  margin-bottom: 40px;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+}
+.product-card {
+  background-color: #fff;
+  border: 4px solid #70f1a8cb;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+}
+
+.product-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: contain;
+  padding: 20px;
+}
+
+.product-card h3 {
+  background-color: #c5ecd6;
+  color: black;
+  font-size: 1.1em;
+  padding: 15px;
+  margin: 0;
+}
+
+
+  .btn-primary {
+    position: relative;
+    overflow: hidden;
+    z-index: 2;
+  }
+  
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    transition: all 0.4s ease;
+    z-index: -1;
+  }
+  
+  .btn-primary:hover::before {
+    left: 100%;
+  }
+  .contact-letter {
+    display: inline-block;
+    transition: all 0.3s ease;
+    transform-origin: center bottom;
+  }
+  
+  .contact-title:hover .contact-letter {
+    animation: bounce 0.5s ease;
+  }
+  
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-10px) scale(1.1); }
+  }
+
+
+  
+  /* Subtitle hover effect */
+  .highlight-text {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .highlight-text::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--bs-primary);
+    transition: width 0.3s ease;
+  }
+  
+  .contact-subtitle:hover .highlight-text::after {
+    width: 100%;
+  }
+  
+  /* Background circles */
+  .contact-circle {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(76, 175, 80, 0.05);
+    z-index: 0;
+  }
+  
+  .circle-1 {
+    width: 300px;
+    height: 300px;
+    top: -100px;
+    left: -100px;
+  }
+  
+  .circle-2 {
+    width: 400px;
+    height: 400px;
+    top: -100px;
+    right: -50px;
+  }
+  
+  .circle-3 {
+    width: 150px;
+    height: 150px;
+    top: 10%;
+    right: 10%;
+
+  }
+ 
+  
+  
+
+  
+  /* Contact info item hover */
+  .contact-info-item {
+    transition: all 0.3s ease;
+    padding: 10px;
+    border-radius: 8px;
+  }
+  
+  .contact-info-item:hover {
+    background: rgba(255, 255, 255, 0.8);
+    transform: translateX(5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Form card hover */
+  .contact-form-card {
+    transition: all 0.3s ease;
+  }
+  
+  .contact-form-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+  }
+  
+  .footer-link {
+  text-decoration: none;
+}
+
+.footer-link:hover {
+  text-decoration: underline;
+  color: #ffffff;
+}
+
+
