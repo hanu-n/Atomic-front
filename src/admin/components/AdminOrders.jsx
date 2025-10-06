@@ -8,6 +8,7 @@ const AdminOrders = () => {
   const { currentUser } = useAuth();
 
   const fetchOrders = async () => {
+    if (!currentUser || !currentUser.token) return;
     try {
       const { data } = await axios.get('/api/orders/all', {
         headers: {
@@ -36,8 +37,10 @@ const AdminOrders = () => {
   };
 
   useEffect(() => {
-    fetchOrders();
-  }, []);
+    if (currentUser && currentUser.token) {
+      fetchOrders();
+    }
+  }, [currentUser]);
 
   return (
     <div className="admin-orders-wrapper" style={{ backgroundColor: '#e6ffe6', minHeight: '100vh', padding: '2rem' }}>

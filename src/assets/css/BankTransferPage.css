@@ -1,0 +1,396 @@
+.bank-transfer-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 20px 0;
+}
+
+.bank-transfer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.bank-transfer-header {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: 1px solid #2C5364;
+  color: #2C5364;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+}
+
+.back-btn:hover {
+  background: #2C5364;
+  color: white;
+}
+
+.page-title {
+  font-size: 2.5rem;
+  color: #2C5364;
+  margin: 0 0 15px 0;
+  font-weight: 700;
+}
+
+.order-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #f8f9fa;
+  padding: 10px 20px;
+  border-radius: 25px;
+}
+
+.total-label {
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.total-amount {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2C5364;
+}
+
+.instructions-card {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.instructions-card h3 {
+  color: #2C5364;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+.instructions-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.step-number {
+  background: #2C5364;
+  color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.step-text {
+  color: #333;
+  font-weight: 500;
+}
+
+.banks-section {
+  margin-bottom: 30px;
+}
+
+.section-title {
+  font-size: 2rem;
+  color: #2C5364;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.banks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+.bank-card {
+  background: white;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #e9ecef;
+}
+
+.bank-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.bank-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.bank-logo {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+}
+
+.logo-placeholder {
+  font-size: 12px;
+  font-weight: 700;
+  color: #2C5364;
+  text-align: center;
+}
+
+.bank-logo img {
+  max-width: 40px;
+  max-height: 40px;
+}
+
+.bank-info {
+  flex: 1;
+}
+
+.bank-name {
+  font-size: 1.3rem;
+  color: #2C5364;
+  margin: 0 0 5px 0;
+  font-weight: 600;
+}
+
+.bank-code {
+  color: #6c757d;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.account-details {
+  margin-bottom: 20px;
+}
+
+.account-field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding: 8px 0;
+}
+
+.account-field:last-child {
+  margin-bottom: 0;
+}
+
+.field-label {
+  color: #6c757d;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.field-value {
+  color: #333;
+  font-weight: 600;
+}
+
+.account-number-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.account-number {
+  font-family: 'Courier New', monospace;
+  letter-spacing: 1px;
+}
+
+.copy-btn {
+  background: none;
+  border: none;
+  color: #2C5364;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.copy-btn:hover {
+  background: #f8f9fa;
+}
+
+.amount {
+  color: #00A859;
+  font-size: 1.1rem;
+}
+
+.bank-actions {
+  text-align: center;
+}
+
+.select-btn {
+  background: #2C5364;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.select-btn:hover {
+  background: #203A43;
+  transform: translateY(-2px);
+}
+
+.notes-card {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.notes-card h3 {
+  color: #2C5364;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+.notes-list {
+  list-style: none;
+  padding: 0;
+}
+
+.notes-list li {
+  padding: 8px 0;
+  color: #333;
+  position: relative;
+  padding-left: 25px;
+}
+
+.notes-list li:before {
+  content: "•";
+  color: #2C5364;
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+}
+
+.support-section {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.support-section h3 {
+  color: #2C5364;
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+}
+
+.support-section p {
+  color: #6c757d;
+  margin-bottom: 20px;
+}
+
+.support-contacts {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.support-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #2C5364;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 10px 20px;
+  border: 1px solid #2C5364;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.support-link:hover {
+  background: #2C5364;
+  color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .banks-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .instructions-steps {
+    grid-template-columns: 1fr;
+  }
+  
+  .page-title {
+    font-size: 2rem;
+  }
+  
+  .bank-transfer-header {
+    padding: 20px;
+  }
+  
+  .support-contacts {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .account-field {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .bank-transfer-container {
+    padding: 0 15px;
+  }
+  
+  .bank-card {
+    padding: 20px;
+  }
+  
+  .bank-header {
+    flex-direction: column;
+    text-align: center;
+  }
+}

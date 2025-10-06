@@ -55,8 +55,8 @@ const Cart = () => {
                         </button>
                       </div>
                       <p>
-                        Price: ${item.price} <br />
-                        Subtotal: ${item.price * item.quantity}
+                        Price: etb-{item.price} <br />
+                        Subtotal: etb-{item.price * item.quantity}
                       </p>
                     </div>
 
@@ -75,7 +75,7 @@ const Cart = () => {
                  <button onClick={()=>{navigate('/place-order')}} className="ms-3 fw-bolder w-75 text-align-center text-white btn btn-success">Proceed to checkout </button>
 
           <div className="mt-4">
-            <h4>Total: ${total.toFixed(2)}</h4>
+            <h4>Total: etb-{total.toFixed(2)}</h4>
           </div>
         </>
       )}

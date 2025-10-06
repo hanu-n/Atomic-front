@@ -1,19 +1,15 @@
-import React from 'react'
-import { Routes ,Route, useLocation } from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 
-import Home from './pages/Home'
-import About from './pages/About'
+import Home from './pages/Home';
 import ProductList from './pages/ProductList';
-import Contact from './pages/Contact'
-import Login from './pages/Login';
 import Cart from './pages/Cart';
-import Header from './components/Header'
-import Footer from './components/Footer'
+import Header from './components/Header';
+import Footer from './components/Footer';
 import ProductDetail from './pages/ProductDetail';
-import Register from './pages/Register';
 import Logout from './pages/Logout';
 import VerifyEmail from './pages/VerifyEmail';
 import Section2 from './pages/Section2';
@@ -22,55 +18,88 @@ import PlaceOrder from './pages/PlaceOrder';
 import ThankYou from './pages/ThankYou';
 import DeleteAccount from './pages/DeleteAccount'; 
 import CategoryPage from './pages/CategoryPage';
-//=================ADMIN=====================
+import ProtectedRoute from './components/ProtectedRoute';
+import Checkout from './pages/Checkout';
+import BankTransferPage from './pages/BankTransferPage';
+
+// Admin
 import PrivateAdminRoute from './admin/PrivateAdminRoute';
 import AdminDashboard from './admin/AdminDashboard';
 import OrderList from './admin/components/AdminOrders';
 import SearchResults from './pages/SearchResults';
 import ProductList2 from './admin/components/ProductList2';
-
-
-
-
+import NotFoundPage from './pages/NotFoundPage';
+import Auth from './pages/Auth';
+import Terms from './pages/Terms';
+import Privacy from './pages/Privacy ';
+import AtomicLoader from './components/loader/AtomicLoader';
+import LoaderTest from './components/loader/LoaderTest';
+import ScrollToTopButton from './components/ScrollToTopButton';
 const App = () => {
- 
+  const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowSplash(false), 3000); 
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
- <>
-    <Header/>
-        <Routes>
-            <Route path='/' element={<Home/>} ></Route>
-            <Route path='/about' element={<About/>} ></Route>
-            <Route path='/contact' element={<Contact/>} ></Route>
-            <Route path='/products' element={<ProductList/>} ></Route>
-            <Route path='/product/:id' element={<ProductDetail/>} ></Route>
-            <Route path='/login' element={<Login/>} ></Route>
-            <Route path='/cart' element={<Cart/>} ></Route>
-            <Route path='/register' element={<Register/>} ></Route>
-            <Route path='/logout' element={<Logout/>} ></Route>
-            <Route path='/verify-email' element={<VerifyEmail/>} ></Route>
-            <Route path='/place-order' element={<PlaceOrder/>} ></Route>
-            <Route path='/thank-you' element={<ThankYou/>} ></Route>
-            <Route path='/DeleteAccount' element={<DeleteAccount/>} ></Route>
-            <Route path='/admin/orders' element={<OrderList/>} ></Route>
-            <Route path="/admin"element={<PrivateAdminRoute><AdminDashboard/></PrivateAdminRoute>}/>
-            <Route path="/search/:keyword" element={<SearchResults />} />
+    <>
+      {showSplash ? (
+        <AtomicLoader />
+      ) : (
+         <PayPalScriptProvider options={{ "client-id": import.meta.env.VITE_PAYPAL_CLIENT_ID }}>
+          <Header />
+
+          <Routes>
+            <Route path='/' element={<Home />} />
+            <Route path='/about' element={<Section2 />} />
+            <Route path='/contact' element={<Section3 />} />
+            <Route path='/products' element={<ProductList />} />
+            <Route path='/products/:id' element={<ProductDetail />} />
+            <Route path='/logout' element={<Logout />} />
+            <Route path='/auth' element={<Auth />} />
+            <Route path='/verify-email' element={<VerifyEmail />} />
+            <Route path='/terms' element={<Terms />} />
+            <Route path='/policy' element={<Privacy />} />
+            <Route path='/checkout' element={<Checkout />} />
+            <Route path='/loader-test' element={<LoaderTest />} />
+            <Route path='/bank-transfer' element={<BankTransferPage />} />
+
+            {/* Protected Routes */}
+            <Route path='/cart' element={<Cart />} />
+            <Route path='/place-order' element={<ProtectedRoute><PlaceOrder /></ProtectedRoute>} />
+            <Route path='/thank-you' element={<ProtectedRoute><ThankYou /></ProtectedRoute>} />
+            <Route path='/DeleteAccount' element={<ProtectedRoute><DeleteAccount /></ProtectedRoute>} />
+
+            {/* Admin Routes */}
+            <Route path="/admin/orders" element={<OrderList />} />
+            <Route path="/admin" element={<PrivateAdminRoute><AdminDashboard /></PrivateAdminRoute>} />
             <Route path="/admin/pro-list" element={<ProductList2 />} />
-            <Route path="/category/:categoryName" element={<CategoryPage />} />
-            <Route path="/category/:categoryName/:subCategoryName" element={<CategoryPage />} />
 
+            {/* Other Routes */}
+            <Route path="/products/search/:keyword" element={<SearchResults />} />
+            <Route path='/products/category/:categoryName' element={<CategoryPage />} />
+            <Route path='/products/category/:categoryName/:subCategoryName' element={<CategoryPage />} />
+            <Route path='/products/category/:categoryName/:subCategoryName/:subSubCategoryName' element={<CategoryPage />} />
 
-                      <Route path="*" element={<div >404 Not Found</div>} />
-                    
-        </Routes>
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
 
-          <ToastContainer position="top-right" draggable
-        theme="light" autoClose={1500}/>
-    
-       <Footer/>
-       
-      
-   </> 
-  )
+          <ToastContainer
+            position="top-right"
+            draggable
+            theme="light"
+            autoClose={1500}
+          />
+
+         
+          <Footer />
+          <ScrollToTopButton />
+        </PayPalScriptProvider>
+      )}
+    </>
+  );
 }
 
-export default App
+export default App;

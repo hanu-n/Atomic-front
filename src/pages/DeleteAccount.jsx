@@ -1,5 +1,6 @@
 import React from 'react';
 import { getAuth } from 'firebase/auth';
+import { toast } from "react-toastify";
 
 const DeleteAccount = () => {
   const handleDeleteAccount = async () => {
@@ -12,21 +13,16 @@ const DeleteAccount = () => {
 
       try {
         await user.delete();
-        alert('Account deleted successfully');
+        toast.success('Account deleted successfully');
         // Optional: redirect to home or login page
         window.location.href = '/';
       } catch (error) {
         console.error('Error deleting account:', error);
 
-        // if (error.code === 'auth/requires-recent-login') {
-        //   alert('Please log in again before deleting your account.');
-        //   // Optionally, navigate them to the login page
-        // } else {
-        //   alert('Error deleting account.');
-        // }
+       
       }
     } else {
-      alert('No user is currently logged in.');
+      toast.success('No user is currently logged in.');
     }
   };
 
@@ -40,3 +36,5 @@ const DeleteAccount = () => {
 };
 
 export default DeleteAccount;
+
+

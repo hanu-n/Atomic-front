@@ -1,8 +1,13 @@
 import {initializeApp} from 'firebase/app'
-import { getAuth } from "firebase/auth";
+import { 
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  sendEmailVerification,
+  applyActionCode,
+  onAuthStateChanged
+} from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-
-
 
 const firebaseConfig = {
   apiKey: "AIzaSyDmWCAszsxLixP8ALNjyCBc7tGCjuTNcXc",
@@ -17,4 +22,36 @@ const firebaseConfig = {
 const app=initializeApp(firebaseConfig)
 
 export const auth=getAuth(app)
+export const googleProvider = new GoogleAuthProvider();
 export const db=getFirestore(app)
+
+// Action Code Settings for email verification
+const actionCodeSettings = {
+  url: `${window.location.origin}/verify-email`,
+  handleCodeInApp: true,
+};
+
+// Email verification functions
+export const sendVerificationEmail = async (user) => {
+  try {
+    await sendEmailVerification(user, actionCodeSettings);
+    return { success: true, message: 'Verification email sent successfully!' };
+  } catch (error) {
+    console.error('Email verification error:', error);
+    return { success: false, message: error.message };
+  }
+};
+
+export const verifyEmailWithCode = async (oobCode) => {
+  try {
+    await applyActionCode(auth, oobCode);
+    return { success: true, message: 'Email verified successfully!' };
+  } catch (error) {
+    console.error('Email verification error:', error);
+    return { success: false, message: error.message };
+  }
+};
+// Check if user is verified
+export const isUserVerified = (user) => {
+  return user && user.emailVerified;
+};

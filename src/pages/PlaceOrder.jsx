@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
-import { getAuth } from 'firebase/auth';
+import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import {toast} from 'react-toastify'
@@ -8,7 +8,7 @@ import {toast} from 'react-toastify'
 const PlaceOrder = () => {
   const { cartItems, totalPrice, dispatch } = useCart();
   const navigate = useNavigate();
-  const auth = getAuth();
+  const { currentUser } = useAuth();
 
   const [shippingInfo, setShippingInfo] = useState({
     fullName: '',
@@ -32,12 +32,11 @@ const PlaceOrder = () => {
     }
 
     try {
-      const user = auth.currentUser;
-      if (!user) {
+      if (!currentUser) {
         toast.error('User not authenticated');
         return;
       }
-      const token = await user.getIdToken();
+      const token = currentUser.token;
       const response = await axios.post(
         'http://localhost:5000/api/orders',
         {
@@ -57,7 +56,7 @@ const PlaceOrder = () => {
     } catch (error) {
       console.error('Order error:', error);
       const msg = error?.response?.data?.message || 'Something went wrong.';
-      alert(msg);
+      toast.error(msg)
     }
   };
 

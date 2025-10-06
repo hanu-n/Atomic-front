@@ -1,238 +1,142 @@
+
 import { useEffect, useState } from "react";
-import { auth } from "../firebase";
-import { sendEmailVerification } from "firebase/auth";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 
 const VerifyEmail = () => {
-  const [email, setEmail] = useState("");
-  const [verified, setVerified] = useState(false);
+  const [searchParams] = useSearchParams();
+  const success = searchParams.get("success");
+  const error = searchParams.get("error");
+  const [sending, setSending] = useState(false);
   const navigate = useNavigate();
 
-  // Check user and send verification email on page load
   useEffect(() => {
-    const checkUserAndSendEmail = async () => {
-      const user = auth.currentUser;
-      if (user) {
-        await user.reload();
-        setEmail(user.email);
-
-        if (!user.emailVerified) {
-          try {
-            await sendEmailVerification(user);
-            toast.success("Verification email sent!");
-          } catch (error) {
-            console.error("Send failed:", error.message);
-            toast.error("Failed to send verification email.");
-          }
-        } else {
-          toast.success("Email already verified!");
-          navigate("/");
-        }
-      } else {
-        // Fallback if session expired
-        const storedEmail = localStorage.getItem("verify-email");
-        if (storedEmail) setEmail(storedEmail);
-        toast.error("Session expired. Please login again.");
-      }
-    };
-
-    checkUserAndSendEmail();
-  }, [navigate]);
-
-  // Handle Resend
-  const handleResend = async () => {
-    
-    const user = auth.currentUser;
-    if (!user) {
-      toast.error("No user found. Please log in again.");
-      return;
+    if (success === "true") {
+      toast.success("🎉 Email verified successfully! You can now log in.");
+      setTimeout(() => {
+        navigate("/auth?mode=login&verified=true");
+      }, 2000);
     }
 
+    if (error) {
+      let errorMessage = "Verification failed. Please try again.";
+      switch (error) {
+        case "invalid_token":
+          errorMessage = "Invalid verification link.";
+          break;
+        case "user_not_found":
+          errorMessage = "User not found. Please register again.";
+          break;
+        case "invalid_or_expired":
+          errorMessage = "Verification link expired. Please request a new one.";
+          break;
+      }
+      toast.error(errorMessage);
+    }
+  }, [success, error, navigate]);
+
+  const resend = async () => {
     try {
-      await user.reload();
-      if (user.emailVerified) {
-        setVerified(true);
-        toast.info("Email already verified.");
-      } else {
-        await sendEmailVerification(user);
-        
-        toast.success("Verification email resent!");
+      setSending(true);
+      const email = localStorage.getItem("verify-email");
+      if (!email) {
+        toast.info("No email found. Please register again.");
+        navigate("/auth?mode=register");
+        return;
       }
-    } catch (error) {
-      console.error("Resend error:", error.message);
-      toast.error("Could not resend verification email.");
+
+      const res = await fetch("http://localhost:5000/api/users/send-verification", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await res.json();
+      if (data.success) toast.success("📩 Verification email resent!");
+      else toast.error(data.message || "Failed to resend.");
+    } catch (e) {
+      toast.error("Resend failed. Try again.");
+    } finally {
+      setSending(false);
     }
-   
   };
-
-  // Auto-check every 3 sec
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      const user = auth.currentUser;
-      if (user) {
-        await user.reload();
-        if (user.emailVerified) {
-          toast.success("Email verified! Redirecting to login...");
-          localStorage.removeItem("verify-email");
-          clearInterval(interval);
-          setTimeout(() => navigate("/login"), 2000);
-        }
-      }
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, [navigate]);
 
   return (
     <div className="container py-5 text-center">
-      <h2>Verify Your Email</h2>
-      <p>
-        A verification link has been sent to:{" "}
-        <strong>{email || "your email"}</strong>. Please check your inbox.
-      </p>
-      <button  className="btn btn-warning mt-3" onClick={handleResend} >Resend Verification Email</button>
-
-      
+      <div className="row justify-content-center">
+        <div className="col-md-6">
+          <div className="card shadow">
+            <div className="card-body p-5">
+              {success === "true" ? (
+                <div>
+                  <div className="text-success mb-3">
+                    <i className="fas fa-check-circle" style={{ fontSize: "4rem" }}></i>
+                  </div>
+                  <h3 className="text-success">🎉 Email Verified!</h3>
+                  <p className="text-muted">Redirecting you to login page...</p>
+                  <div className="mt-4">
+                    <button 
+                      className="btn btn-success"
+                      onClick={() => navigate("/auth?mode=login&verified=true")}
+                    >
+                      Go to Login
+                    </button>
+                  </div>
+                </div>
+              ) : error ? (
+                <div>
+                  <div className="text-danger mb-3">
+                    <i className="fas fa-exclamation-triangle" style={{ fontSize: "4rem" }}></i>
+                  </div>
+                  <h3 className="text-danger">Verification Failed</h3>
+                  <p className="text-muted">There was an issue verifying your email.</p>
+                  <div className="mt-4">
+                    <button 
+                      className="btn btn-primary me-2"
+                      onClick={() => navigate("/auth?mode=register")}
+                    >
+                      Register Again
+                    </button>
+                    <button 
+                      className="btn btn-outline-secondary"
+                      onClick={resend}
+                      disabled={sending}
+                    >
+                      {sending ? "Sending..." : "Resend Email"}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <div className="text-info mb-3">
+                    <i className="fas fa-envelope" style={{ fontSize: "4rem" }}></i>
+                  </div>
+                  <h3>Check Your Email</h3>
+                  <p className="text-muted">We've sent you a verification link.</p>
+                  <p className="text-muted">Please check your email and click the verification link.</p>
+                  <div className="mt-4">
+                    <button 
+                      className="btn btn-outline-primary me-2"
+                      onClick={() => navigate("/auth?mode=login")}
+                    >
+                      Back to Login
+                    </button>
+                    <button 
+                      className="btn btn-primary"
+                      onClick={resend}
+                      disabled={sending}
+                    >
+                      {sending ? "Sending..." : "Resend Email"}
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
 export default VerifyEmail;
-
-
-
-
-
-
-
-
-
-
-
-
-// import { useEffect, useState } from "react";
-// import { auth } from "../firebase";
-// import { sendEmailVerification } from "firebase/auth";
-// import { toast } from "react-toastify";
-// import { useNavigate } from "react-router-dom";
-
-// const VerifyEmail = () => {
-//   const [email, setEmail] = useState("");
-//     const [verified, setVerified] = useState(false);
-
-//   const navigate=useNavigate()
-
-// useEffect(() => {
-//   const checkAndSendVerification = async () => {
-//     try {
-//       const user = auth.currentUser;
-
-//       if (!user) {
-//         // User is not logged in (session expired or not properly set)
-//         const storedEmail = localStorage.getItem("verify-email");
-//         if (storedEmail) {
-//           setEmail(storedEmail);
-//         }
-//         toast.error("User not found. Please log in again.");
-//         return;
-//       }
-
-//       await user.reload(); // Make sure we get the latest state
-//       setEmail(user.email);
-
-//       if (!user.emailVerified) {
-//         await sendEmailVerification(user); // Only call this if user exists and is unverified
-//         toast.success("Verification email sent!");
-//       } else {
-//         toast.success("Email already verified!");
-//         navigate("/");
-//       }
-
-//     } catch (error) {
-//       console.error("Verification Error:", error);
-//       toast.error("Failed to send verification email. Please try again.");
-//     }
-//   };
-
-//   checkAndSendVerification();
-// }, []);
-
-
-
-// //  useEffect(() => {
-// //   const user = auth.currentUser;
-// //   if (user) {
-// //     setEmail(user.email);
-// //     if (!user.emailVerified) {
-// //       sendEmailVerification(user)
-// //         .then(() => {
-// //           toast.success("Verification email sent!");
-// //         })
-// //         .catch((error) => {
-// //           toast.error("Failed to send verification email.");
-// //         });
-// //     }
-// //   } else {
-// //     const storedEmail = localStorage.getItem("verify-email");
-// //     if (storedEmail) {
-// //       setEmail(storedEmail);
-// //     }
-// //   }
-// // }, []);
-
-//   const handleResend = async () => {
-//     const user = auth.currentUser;
-
-//     if (user) {
-//           await user.reload(); 
-//       try {
-        
-//         if (user.emailVerified) {
-//            setVerified(true);
-//           toast.info("Email already verified.");
-//         } else {
-//           await sendEmailVerification(user);
-//           toast.success("Verification email resent!");
-//         }
-//       } catch (error) {
-//         console.error("Resend Error:", error.message);
-//         toast.error("Failed to resend email. Please try again.");
-//       }
-//     } else {
-//       toast.error("No user found. Please register first.");
-//     }
-//   };
-
-//     useEffect(() => {
-//     const interval = setInterval(async () => {
-//       const user = auth.currentUser;
-//       if (user) {
-//         await user.reload(); 
-//         if (user.emailVerified) {
-//           toast.success("Email verified! Redirecting to login...");
-//           clearInterval(interval);
-//           localStorage.removeItem("verify-email"); 
-//           setTimeout(() => navigate("/login"), 2000);
-//         }
-//       }
-//     }, 3000);
-
-//     return () => clearInterval(interval);
-//   }, [navigate]);
-
-//   return (
-//     <div className="container py-5 text-center">
-//       <h2>Verify Your Email</h2>
-//       <p>
-//         A verification link has been sent to your email address:{" "}
-//         <strong>{email}</strong>. Please check your inbox or spam folder.
-//       </p>
-//       <button className="btn btn-warning" onClick={handleResend}>
-//         Resend Verification Email
-//       </button>
-//     </div>
-//   );
-// };
-
-// export default VerifyEmail;

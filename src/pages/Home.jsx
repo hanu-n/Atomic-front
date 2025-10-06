@@ -5,13 +5,13 @@ import chemistryLab from '../assets/images/chemistry lab equip.png'
 import bioLab from '../assets/images/bio lab models.png'
 import chemLab from '../assets/images/chem lab chemicals.png'
 import analytical from '../assets/images/analytical lab equip.png'
-
-
+import Section2 from './Section2';
+import Section3 from './Section3';
 
 const Home = () => {
   return (
    <>
-       <div className="py-4" style={{backgroundColor: '#d2f5d0'}}>
+       <div className="hero-section py-4">
      
      <div className="container" id="home">
  <div className="row align-items-center mt-5">
@@ -61,6 +61,8 @@ const Home = () => {
        
       </div>
     </section>
+    <Section2 />
+    <Section3 />
     </>
   )
 }

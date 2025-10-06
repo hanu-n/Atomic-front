@@ -43,7 +43,7 @@ const Section2 = () => {
         <div className="col-lg-6">
           <p className="lead">
             Our Vision is to make learning accessible by providing <span className="text-success">top-quality</span> educational resources at
-            <span className="text-success fw-bold">affordable prices</span> and to become a renowned supplier of lab and educational materials.
+            <span className="text-success fw-bold"> affordable prices</span> and to become a renowned supplier of lab and educational materials.
             We aim to transition from import to <span className="text-success fw-bold">manufacturing</span> and play a big role in Ethiopia's science industry.
           </p>
         </div>
