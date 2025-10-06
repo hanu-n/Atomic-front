@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
 
 const Cart = () => {
   const { cartItems, dispatch } = useCart();
-  const navigate=useNavigate()
+  const navigate = useNavigate();
+  const { currentUser } = useAuth();
 
   const handleRemove = (id) => {
     dispatch({ type: 'REMOVE_FROM_CART', payload: id });
@@ -72,7 +74,18 @@ const Cart = () => {
              
             ))}
           </div>
-                 <button onClick={()=>{navigate('/place-order')}} className="ms-3 fw-bolder w-75 text-align-center text-white btn btn-success">Proceed to checkout </button>
+                 <button
+                   onClick={() => {
+                     if (!currentUser) {
+                       navigate('/auth', { state: { from: { pathname: '/checkout' } } });
+                     } else {
+                       navigate('/checkout');
+                     }
+                   }}
+                   className="ms-3 fw-bolder w-75 text-align-center text-white btn btn-success"
+                 >
+                   Proceed to checkout
+                 </button>
 
           <div className="mt-4">
             <h4>Total: etb-{total.toFixed(2)}</h4>

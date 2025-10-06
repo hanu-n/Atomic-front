@@ -14,7 +14,8 @@ const PlaceOrder = () => {
     fullName: '',
     address: '',
     city: '',
-    phone: '',
+    postalCode: '',
+    country: '',
   });
 
   const handleChange = (e) => {
@@ -25,8 +26,8 @@ const PlaceOrder = () => {
   const handlePlaceOrder = async (e) => {
     e.preventDefault();
 
-    const { fullName, address, city, phone } = shippingInfo;
-    if (!fullName || !address || !city || !phone) {
+    const { fullName, address, city, postalCode, country } = shippingInfo;
+    if (!fullName || !address || !city || !postalCode || !country) {
       toast.error('Please fill in all fields');
       return;
     }
@@ -37,11 +38,27 @@ const PlaceOrder = () => {
         return;
       }
       const token = currentUser.token;
+      // Ensure each orderItem has all required fields
+      const orderItems = cartItems.map(item => ({
+        name: item.name,
+        quantity: item.quantity,
+        image: item.image,
+        price: item.price,
+        product: item._id || item.product // fallback if _id is not present
+      }));
+
       const response = await axios.post(
         'http://localhost:5000/api/orders',
         {
-          cartItems,
-          shippingInfo,
+          orderItems,
+          shippingAddress: {
+            fullName,
+            address,
+            city,
+            postalCode,
+            country,
+          },
+          totalPrice,
         },
         {
           headers: {
@@ -91,6 +108,7 @@ const PlaceOrder = () => {
                     required
                   />
                 </div>
+
                 <div className="mb-3">
                   <input
                     type="text"
@@ -104,11 +122,22 @@ const PlaceOrder = () => {
                 </div>
                 <div className="mb-3">
                   <input
-                    type="tel"
-                    name="phone"
+                    type="text"
+                    name="postalCode"
                     className="form-control"
-                    placeholder="Phone Number"
-                    value={shippingInfo.phone}
+                    placeholder="Postal Code"
+                    value={shippingInfo.postalCode}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+                <div className="mb-3">
+                  <input
+                    type="text"
+                    name="country"
+                    className="form-control"
+                    placeholder="Country"
+                    value={shippingInfo.country}
                     onChange={handleChange}
                     required
                   />

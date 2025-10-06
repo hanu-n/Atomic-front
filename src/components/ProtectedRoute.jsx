@@ -3,7 +3,7 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const ProtectedRoute = ({ children, requireVerification = true }) => {
-  const { user, loading, isVerified } = useAuth();
+  const { currentUser, loading, isVerified } = useAuth();
   const location = useLocation();
 
   // Show loading while checking auth state
@@ -16,7 +16,7 @@ const ProtectedRoute = ({ children, requireVerification = true }) => {
   }
 
   // If no user, redirect to login
-  if (!user) {
+  if (!currentUser) {
     return <Navigate to="/auth" replace state={{ from: location }} />;
   }
 

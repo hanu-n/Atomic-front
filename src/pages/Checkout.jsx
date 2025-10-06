@@ -1,3 +1,4 @@
+  
 import React, { useState } from "react";
 import PayPalButton from "../components/PayPalButton";
 import { useCart } from "../context/CartContext";
@@ -14,6 +15,9 @@ const Checkout = () => {
     (acc, item) => acc + item.price * item.quantity,
     0
   );
+  const handlePlaceOrder = () => {
+    navigate('/place-order');
+  };
 
   // Ethiopian banks data
   const ethiopianBanks = [
@@ -74,6 +78,8 @@ const Checkout = () => {
     
     toast.success((`Thank you! Please complete your ${method} payment to confirm your order.`))
   };
+
+ 
 
   return (
     <div className="checkout-page">
@@ -273,6 +279,13 @@ const Checkout = () => {
                   </div>
                 )}
               </div>
+            </div>
+
+            {/* Place Order Button */}
+            <div className="d-flex justify-content-end mt-4">
+              <button className="btn btn-success btn-lg" onClick={handlePlaceOrder}>
+                Place Order
+              </button>
             </div>
 
             {/* Support Section */}

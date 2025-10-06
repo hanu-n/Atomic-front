@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { auth } from '../firebase';
 import { onAuthStateChanged, signOut, getIdToken } from "firebase/auth";
-import { isUserVerified } from '../utils/authUtils';
+// import { isUserVerified } from '../utils/authUtils';
 
 const AuthContext = createContext();
 
@@ -13,15 +13,19 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unSub = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
-        // 👇 fetch Firebase JWT
         const token = await getIdToken(firebaseUser, true);
-
         setCurrentUser({
-          ...firebaseUser,   // keep Firebase data
-          token,             // attach token
+          ...firebaseUser,
+          token,
         });
-
-        setIsVerified(isUserVerified(firebaseUser));
+        // Check backend verification status
+        try {
+          const res = await fetch(`http://localhost:5000/api/users/is-verified/${firebaseUser.uid}`);
+          const data = await res.json();
+          setIsVerified(!!data.isVerified);
+        } catch (err) {
+          setIsVerified(false);
+        }
       } else {
         setCurrentUser(null);
         setIsVerified(false);
@@ -38,7 +42,14 @@ export const AuthProvider = ({ children }) => {
       await auth.currentUser.reload();
       const token = await getIdToken(auth.currentUser, true);
       setCurrentUser({ ...auth.currentUser, token });
-      setIsVerified(isUserVerified(auth.currentUser));
+      // Check backend verification status
+      try {
+        const res = await fetch(`http://localhost:5000/api/users/is-verified/${auth.currentUser.uid}`);
+        const data = await res.json();
+        setIsVerified(!!data.isVerified);
+      } catch (err) {
+        setIsVerified(false);
+      }
     }
   };
 
