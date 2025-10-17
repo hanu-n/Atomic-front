@@ -21,7 +21,7 @@ const ProductDetail = () => {
 
   useEffect(()=>{
     setLoading(true);
-    axios(`http://localhost:5000/api/products/${id}`)
+    axios(`https://atomic-7jgw.onrender.com/api/products/${id}`)
      .then((res) => {
       console.log("Fetched product:", res.data);
       setProduct(res.data);

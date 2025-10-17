@@ -25,11 +25,11 @@ const DashboardStats = () => {
     if (!currentUser || !currentUser.token) return;
     try {
       // Fetch products
-      const productsRes = await axios.get('/api/products');
+      const productsRes = await axios.get('https://atomic-7jgw.onrender.com/api/products');
       const products = productsRes.data;
       
       // Fetch orders
-      const ordersRes = await axios.get('/api/orders/all', {
+      const ordersRes = await axios.get('https://atomic-7jgw.onrender.com/api/orders/all', {
         headers: {
           Authorization: `Bearer ${currentUser.token}`,
         },

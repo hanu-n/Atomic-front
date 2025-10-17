@@ -25,7 +25,7 @@ function useQuery() {
  const fetchProducts = async () => {
   setLoading(true);
   try {
-    const res = await  axios.get("http://localhost:5000/api/products")
+    const res = await  axios.get("https://atomic-7jgw.onrender.com/api/products")
    
 
     setProducts(Array.isArray(res.data) ? res.data : res.data.data || []);
@@ -46,7 +46,7 @@ function useQuery() {
           return;
         }
 
-        await axios.delete(`/api/products/${id}`, {
+        await axios.delete(`https://atomic-7jgw.onrender.com/api/products/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

@@ -36,17 +36,27 @@ const CategoryPageExample = ({ categoryName }) => {
     <div>
       <h1>{categoryName} Products</h1>
       {/* Your products content */}
+      <ContextualLoader category="biology" />     // Shows DNA helix
+<ContextualLoader category="chemistry" />   // Shows beaker
+<ContextualLoader category="physics" />     // Shows gears
+<ContextualLoader category="agriculture" /> // Shows growing grass
+<ContextualLoader category="medical" />     // Shows medical cross
+<ContextualLoader category="general" />     // Shows atomic loader
+
+
     </div>
+    
   );
 };
+
 
 export default CategoryPageExample;
 
 // Usage Examples:
-// <ContextualLoader category="biology" />     // Shows DNA helix
-// <ContextualLoader category="chemistry" />   // Shows beaker
-// <ContextualLoader category="physics" />     // Shows gears
-// <ContextualLoader category="agriculture" /> // Shows growing grass
-// <ContextualLoader category="medical" />     // Shows medical cross
-// <ContextualLoader category="general" />     // Shows atomic loader
-
+{/* <ContextualLoader category="biology" />     // Shows DNA helix
+<ContextualLoader category="chemistry" />   // Shows beaker
+<ContextualLoader category="physics" />     // Shows gears
+<ContextualLoader category="agriculture" /> // Shows growing grass
+<ContextualLoader category="medical" />     // Shows medical cross
+<ContextualLoader category="general" />     // Shows atomic loader
+ */}

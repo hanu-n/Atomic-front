@@ -21,7 +21,7 @@ const NotFoundPage = () => {
         <h1 className="not-found-title">Page Not Found</h1>
         
         <p className="not-found-description">
-          Oops! The page you're looking for seems to have drifted off into space.
+          Oops! The page you're looking for seems to have sank into a beaker.
           It might have been moved, deleted, or perhaps you typed the wrong URL.
         </p>
         

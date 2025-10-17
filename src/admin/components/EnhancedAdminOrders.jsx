@@ -21,7 +21,7 @@ const EnhancedAdminOrders = () => {
   const fetchOrders = async () => {
     if (!currentUser || !currentUser.token) return;
     try {
-      const { data } = await axios.get('/api/orders/all', {
+      const { data } = await axios.get('https://atomic-7jgw.onrender.com/api/orders/all', {
         headers: {
           Authorization: `Bearer ${currentUser.token}`,
         },
@@ -37,7 +37,7 @@ const EnhancedAdminOrders = () => {
 
   const updateOrderStatus = async (orderId, newStatus) => {
     try {
-      await axios.put(`/api/orders/${orderId}/status`, 
+      await axios.put(`https://atomic-7jgw.onrender.com/api/orders/${orderId}/status`, 
         { status: newStatus },
         {
           headers: {
@@ -59,7 +59,7 @@ const EnhancedAdminOrders = () => {
 
   const markAsSeen = async (id) => {
     try {
-      await axios.put(`/api/orders/${id}/seen`, {}, {
+      await axios.put(`https://atomic-7jgw.onrender.com/api/orders/${id}/seen`, {}, {
         headers: {
           Authorization: `Bearer ${currentUser.token}`,
         },

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-
+// 
 const ProtectedRoute = ({ children, requireVerification = true }) => {
   const { currentUser, loading, isVerified } = useAuth();
   const location = useLocation();
@@ -18,6 +18,11 @@ const ProtectedRoute = ({ children, requireVerification = true }) => {
   // If no user, redirect to login
   if (!currentUser) {
     return <Navigate to="/auth" replace state={{ from: location }} />;
+  }
+
+  // If user is admin, always redirect to /admin
+  if (ADMIN_EMAILS.includes(currentUser.email)) {
+    return <Navigate to="/admin" replace />;
   }
 
   // If verification is required and user is not verified, redirect to verification page

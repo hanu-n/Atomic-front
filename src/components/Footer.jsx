@@ -35,14 +35,14 @@ const Footer = () => {
             <div>
               <h6 className="text-success mb-3">Secure Payment Partners</h6>
               <div className="d-flex flex-wrap gap-2">
-                <a href="https://combanketh.et/" target="_blank" rel="noopener noreferrer">
+                <a href="checkout" target="_blank" rel="noopener noreferrer">
                   <img src={cbe} alt="Commercial Bank of Ethiopia" className="img-fluid" style={{height: '40px', width: 'auto'}}/>
                 </a>
-                <a href="https://www.ethiotelecom.et/telebirr/" target="_blank" rel="noopener noreferrer">
+                <a href="checkout" target="_blank" rel="noopener noreferrer">
                   <img src={telebirr} alt="Telebirr" className="img-fluid" style={{height: '40px', width: 'auto'}}/>
                 </a>
                
-                <a href="https://dashenbanksc.com/" target="_blank" rel="noopener noreferrer">
+                <a href="checkout" target="_blank" rel="noopener noreferrer">
                   <img src={dash} alt="Dashen Bank" className="img-fluid" style={{height: '40px', width: 'auto'}}/>
                 </a>
               </div>
@@ -91,13 +91,8 @@ const Footer = () => {
                 </a>
               </li>
               <li className="mb-2">
-                <a href="#" className="text-light text-decoration-none hover-success">
+                <a href="place-order" className="text-light text-decoration-none hover-success">
                   <i className="fas fa-truck me-2"></i>Shipping Info
-                </a>
-              </li>
-              <li className="mb-2">
-                <a href="#" className="text-light text-decoration-none hover-success">
-                  <i className="fas fa-undo me-2"></i>Returns
                 </a>
               </li>
             </ul>
@@ -125,7 +120,7 @@ const Footer = () => {
                 <i className="fas fa-envelope text-success me-3"></i>
                 <div>
                   <strong>Email:</strong><br/>
-                  <span className="text-light">info@atomicplc.com</span>
+                  <span className="text-light">contact@atomicLab.com</span>
                 </div>
               </div>
               <div className="d-flex align-items-center">

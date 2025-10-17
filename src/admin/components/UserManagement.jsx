@@ -16,7 +16,7 @@ const UserManagement = () => {
   const fetchUsers = async () => {
     try {
       if (!currentUser || !currentUser.token) throw new Error('No auth token');
-      const { data } = await axios.get('/api/users/all', {
+      const { data } = await axios.get('https://atomic-7jgw.onrender.com/api/users/all', {
         headers: { Authorization: `Bearer ${currentUser.token}` },
       });
       setUsers(data);
@@ -30,7 +30,7 @@ const UserManagement = () => {
 
   const toggleUserVerification = async (userId, isVerified) => {
     try {
-      await axios.put(`/api/users/${userId}/verify`, 
+      await axios.put(`https://atomic-7jgw.onrender.com/api/users/${userId}/verify`, 
         { isVerified: !isVerified },
         {
           headers: {
@@ -53,7 +53,7 @@ const UserManagement = () => {
   const toggleUserRole = async (userId, currentRole) => {
     const newRole = currentRole === 'admin' ? 'customer' : 'admin';
     try {
-      await axios.put(`/api/users/${userId}/role`, 
+      await axios.put(`https://atomic-7jgw.onrender.com/api/users/${userId}/role`, 
         { role: newRole },
         {
           headers: {

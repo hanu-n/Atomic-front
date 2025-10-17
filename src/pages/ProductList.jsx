@@ -16,7 +16,7 @@ const ProductList = () => {
 
      useEffect(() => {
     setLoading(true);
-    let url = 'http://localhost:5000/api/products';
+    let url = 'https://atomic-7jgw.onrender.com/api/products';
     if (category) {
       url += `?category=${category}`;
     }

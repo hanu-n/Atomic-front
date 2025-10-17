@@ -48,7 +48,7 @@ const PlaceOrder = () => {
       }));
 
       const response = await axios.post(
-        'http://localhost:5000/api/orders',
+        'https://atomic-7jgw.onrender.com/api/orders',
         {
           orderItems,
           shippingAddress: {
@@ -79,7 +79,7 @@ const PlaceOrder = () => {
 
   return (
     <div className="container my-5">
-      <div className="row g-4">
+      <div className=" g-4">
         {/* Shipping Form */}
         <div className="col-md-6">
           <div className="card shadow-sm">
@@ -151,25 +151,7 @@ const PlaceOrder = () => {
           </div>
         </div>
 
-        {/* Order Summary */}
-        <div className="col-md-6">
-          <div className="card shadow-sm">
-            <div className="card-body">
-              <h4 className="card-title mb-3 text-primary fw-bold">Order Summary</h4>
-              <ul className="list-group mb-3">
-                {cartItems.map((item, index) => (
-                  <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
-                    <span>{item.name} x {item.quantity}</span>
-                    <span className="text-muted">${(item.price * item.quantity).toFixed(2)}</span>
-                  </li>
-                ))}
-              </ul>
-              <h5 className="text-end fw-bold">
-                Total: <span className="text-success">${totalPrice.toFixed(2)}</span>
-              </h5>
-            </div>
-          </div>
-        </div>
+        
       </div>
     </div>
   );

@@ -10,7 +10,7 @@ const AdminOrders = () => {
   const fetchOrders = async () => {
     if (!currentUser || !currentUser.token) return;
     try {
-      const { data } = await axios.get('/api/orders/all', {
+      const { data } = await axios.get('https://atomic-7jgw.onrender.com/api/orders/all', {
         headers: {
           Authorization: `Bearer ${currentUser.token}`,
         },

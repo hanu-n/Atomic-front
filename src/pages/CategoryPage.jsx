@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { useCart } from "../context/CartContext";
 import { useParams,Link } from "react-router-dom";
 import axios from "axios";
 import ContextualLoader from "../components/loader/ContextualLoader";
@@ -6,6 +8,7 @@ import ContextualLoader from "../components/loader/ContextualLoader";
 
 const CategoryPage = () => {
   const { categoryName, subCategoryName, subSubCategoryName } = useParams();
+  const { dispatch } = useCart();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [categoryInfo, setCategoryInfo] = useState(null);
@@ -37,7 +40,7 @@ const CategoryPage = () => {
 
     const fetchCategoryInfo = async () => {
       try {
-        const { data } = await axios.get(`/api/categories/${categoryName}`);
+        const { data } = await axios.get(`https://atomic-7jgw.onrender.com/api/categories/${categoryName}`);
         setCategoryInfo(data);
       } catch (error) {
         console.error("Error fetching category info:", error);
@@ -133,18 +136,19 @@ const CategoryPage = () => {
         {products.length > 0 ? (
           products.map((p) => (
             <div key={p._id} className="col-md-4 mb-4">
-               <Link 
-    to={`/products/${p._id}`} 
-    className="text-decoration-none text-dark"
-    style={{ cursor: "pointer" }}
-  >
               <div className="card shadow-sm h-100">
-                <img 
-                  src={p.image} 
-                  className="card-img-top" 
-                  alt={p.name}
-                  style={{ height: "200px", objectFit: "cover" }}
-                />
+                <Link 
+                  to={`/products/${p._id}`} 
+                  className="text-decoration-none text-dark"
+                  style={{ cursor: "pointer" }}
+                >
+                  <img 
+                    src={p.image} 
+                    className="card-img-top" 
+                    alt={p.name}
+                    style={{ height: "200px", objectFit: "cover" }}
+                  />
+                </Link>
                 <div className="card-body d-flex flex-column">
                   <h5 className="card-title">{p.name}</h5>
                   <p className="card-text text-muted">
@@ -154,13 +158,21 @@ const CategoryPage = () => {
                     <p className="card-text">
                       <strong className="text-success">etb-{p.price}</strong>
                     </p>
-                    <button className="btn btn-primary btn-sm w-100">
-                      View Details
+                    <button
+                      className="btn btn-success btn-sm w-100 mb-2"
+                      onClick={() => {
+                        dispatch({ type: "ADD_TO_CART", payload: p });
+                        toast.success(`${p.name} added to cart`);
+                      }}
+                    >
+                      Add to Cart
                     </button>
+                    <Link to={`/products/${p._id}`} className="btn btn-primary btn-sm w-100">
+                      View Details
+                    </Link>
                   </div>
                 </div>
               </div>
-              </Link>
             </div>
           ))
         ) : (

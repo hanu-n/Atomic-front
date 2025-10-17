@@ -11,7 +11,7 @@ const MainHeader = () => {
     const fetchCategories = async () => {
       try {
         setLoading(true);
-        const { data } = await axios.get("/api/categories");
+        const { data } = await axios.get("https://atomic-7jgw.onrender.com/api/categories");
         console.log("Fetched categories:", data);
         setCategories(Array.isArray(data) ? data : []);
       } catch (err) {

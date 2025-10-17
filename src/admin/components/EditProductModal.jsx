@@ -66,7 +66,7 @@ const EditProductModal = ({ product, onUpdate, onClose }) => {
         data.append("image", formData.image);
       }
           const token = await auth.currentUser.getIdToken();
-      const res = await axios.put(`/api/products/${product._id}`, data, {
+      const res = await axios.put(`https://atomic-7jgw.onrender.com/api/products/${product._id}`, data, {
         headers: {
           "Content-Type": "multipart/form-data",
              Authorization: `Bearer ${token}`,

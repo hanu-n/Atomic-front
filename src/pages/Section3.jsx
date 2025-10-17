@@ -22,7 +22,7 @@ e.preventDefault()
 setLoading(true)
 
 try {
-    const res=await axios.post('http://localhost:5000/api/contact',formData)
+    const res=await axios.post('https://atomic-7jgw.onrender.com/api/contact',formData)
           toast.success(res.data.message || "Message sent successfully!");
           setFormData({fullName:'',email:'',subject:'',message:''})
 } catch (error) {

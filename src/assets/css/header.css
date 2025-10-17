@@ -1,0 +1,196 @@
+/* Enhanced User Dropdown Styles */
+.user-trigger {
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.user-trigger:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.user-greeting {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #2C5364;
+}
+
+.user-dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e9ecef;
+  min-width: 280px;
+  z-index: 2000;
+  animation: dropdownSlide 0.3s ease;
+  margin-top: 8px;
+}
+
+@keyframes dropdownSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Auth Link */
+.dropdown-auth-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 20px;
+  color: #2C5364;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border-radius: 12px;
+}
+
+.dropdown-auth-link:hover {
+  background: #f8f9fa;
+  color: #2C5364;
+}
+
+/* User Header */
+.user-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 20px;
+  background: linear-gradient(135deg, #f8f9fa, #fff);
+  border-radius: 12px 12px 0 0;
+}
+
+.user-avatar {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #2C5364, #4ECDC4);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.2rem;
+}
+
+.user-info {
+  flex: 1;
+}
+
+.user-name {
+  font-weight: 700;
+  color: #2C5364;
+  font-size: 1.1rem;
+  margin-bottom: 4px;
+}
+
+.user-email {
+  color: #6c757d;
+  font-size: 0.85rem;
+}
+
+/* Dropdown Items */
+.dropdown-divider {
+  height: 1px;
+  background: #e9ecef;
+  margin: 8px 0;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  color: #2C5364;
+  text-decoration: none;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background: #f8f9fa;
+  color: #2C5364;
+}
+
+.dropdown-item i {
+  width: 20px;
+  text-align: center;
+  color: #6c757d;
+}
+
+/* Special Buttons */
+.logout-btn {
+  color: #6c757d;
+  border-top: 1px solid #f8f9fa;
+}
+
+.logout-btn:hover {
+  color: #dc3545;
+  background: rgba(220, 53, 69, 0.05);
+}
+
+.logout-btn:hover i {
+  color: #dc3545;
+}
+
+.delete-account-btn {
+  color: #6c757d;
+  border-top: 1px solid #f8f9fa;
+}
+
+.delete-account-btn:hover {
+  color: #dc3545;
+  background: rgba(220, 53, 69, 0.05);
+}
+
+.delete-account-btn:hover i {
+  color: #dc3545;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .user-dropdown-menu {
+    min-width: 250px;
+    right: -10px;
+  }
+  
+  .user-header {
+    padding: 15px;
+  }
+  
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+  
+  .user-name {
+    font-size: 1rem;
+  }
+  
+  .user-email {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .user-greeting {
+    display: none !important;
+  }
+  
+  .user-dropdown-menu {
+    min-width: 220px;
+  }
+}

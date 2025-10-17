@@ -20,7 +20,6 @@ import DeleteAccount from './pages/DeleteAccount';
 import CategoryPage from './pages/CategoryPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import Checkout from './pages/Checkout';
-import BankTransferPage from './pages/BankTransferPage';
 
 // Admin
 import PrivateAdminRoute from './admin/PrivateAdminRoute';
@@ -35,6 +34,7 @@ import Privacy from './pages/Privacy ';
 import AtomicLoader from './components/loader/AtomicLoader';
 import LoaderTest from './components/loader/LoaderTest';
 import ScrollToTopButton from './components/ScrollToTopButton';
+
 const App = () => {
   const [showSplash, setShowSplash] = useState(true);
 
@@ -64,7 +64,6 @@ const App = () => {
             <Route path='/policy' element={<Privacy />} />
             <Route path='/checkout' element={<Checkout />} />
             <Route path='/loader-test' element={<LoaderTest />} />
-            <Route path='/bank-transfer' element={<BankTransferPage />} />
 
             {/* Protected Routes */}
             <Route path='/cart' element={<Cart />} />

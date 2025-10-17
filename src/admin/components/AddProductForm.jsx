@@ -82,7 +82,7 @@ const AddProductForm = ({ onProductAdded }) => {
         return;
       }
 
-      const res = await axios.post('http://localhost:5000/api/products', data, { headers });
+      const res = await axios.post('https://atomic-7jgw.onrender.com/api/products', data, { headers });
 
       toast.success('Product added successfully');
       onProductAdded(res.data.product);

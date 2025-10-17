@@ -11,7 +11,6 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate, useSearchParams, useLocation } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
-import { ADMIN_EMAILS } from "../config/adminConfig.js";  
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -89,7 +88,6 @@ const Auth = () => {
       const userCred = await signInWithEmailAndPassword(auth, email, password);
       const firebaseUser = userCred.user;
 
-          const role = ADMIN_EMAILS.includes(firebaseUser.email) ? "admin" : "customer";
 
 const token = await firebaseUser.getIdToken(); // get Firebase ID token
 

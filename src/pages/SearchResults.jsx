@@ -9,7 +9,7 @@ const SearchResults = () => {
   useEffect(() => {
     const fetchSearchResults = async () => {
       try {
-        const { data } = await axios.get(`/api/products/search?keyword=${keyword}`);
+        const { data } = await axios.get(`https://atomic-7jgw.onrender.com/api/products/search?keyword=${keyword}`);
         setProducts(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error("Search error:", error);
@@ -47,7 +47,7 @@ const SearchResults = () => {
                   />
                   <div className="card-body">
                     <h5 className="card-title">{getHighlightedText(product.name, keyword)}</h5>
-                    <p className="card-text">${product.price}</p>
+                    <p className="card-text">etb-{product.price}</p>
                   </div>
                 </div>
               </Link>
