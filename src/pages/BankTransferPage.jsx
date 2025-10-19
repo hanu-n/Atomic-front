@@ -135,7 +135,7 @@ const BankAccountsPage = () => {
             <div 
               key={bank.id} 
               className="bank-account-card"
-              style={{ '--bank-color': bank.color, '--bank-gradient': bank.gradient }}
+              // style={{ '--bank-color': bank.color, '--bank-gradient': bank.gradient }}
             >
               {/* Bank Header with Logo */}
              <div className="bank-card-header">
