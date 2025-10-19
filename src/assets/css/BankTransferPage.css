@@ -172,6 +172,7 @@
   justify-content: center;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
+  overflow: hidden;
 }
 
 .bank-account-card:hover .logo-background {
@@ -180,12 +181,12 @@
 }
 
 .bank-logo {
-  max-width: 50px;
-  max-height: 50px;
-  filter: brightness(0) invert(1);
-  transition: all 0.3s ease;
+  max-width: 90%;     
+  max-height: 80%;    
+  object-fit: contain; 
+  filter: none;      
+  transition: transform 0.3s ease;
 }
-
 .bank-title {
   flex: 1;
 }
@@ -513,4 +514,7 @@
 .hover-glow:hover {
   transform: scale(1.05);
   filter: drop-shadow(0 0 6px var(--bank-color));
+}
+.bank-account-card:hover .bank-logo {
+  transform: scale(1.05);
 }
