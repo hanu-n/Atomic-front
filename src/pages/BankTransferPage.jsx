@@ -142,7 +142,7 @@ const BankAccountsPage = () => {
   <div className="bank-logo-container">
     <div
       className="logo-background"
-      style={{ background: bank.gradient }}
+     
     >
       {/* Logo image fits inside the placeholder */}
       <img
