@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom'
 import chemistryLab from '../assets/images/chemistry lab equip.png'
 import bioLab from '../assets/images/bio lab models.png'
 import chemLab from '../assets/images/chem lab chemicals.png'
-import analytical from '../assets/images/analytical lab equip.png'
+import agriculture from '../assets/images/agriculture.png'
+import medical from '../assets/images/medical.png'
 import Section2 from './Section2';
 import Section3 from './Section3';
 
@@ -40,21 +41,22 @@ const Home = () => {
         </p>
     
         <div className="products-grid">
-          <div className="product-card">
-            <img className="img-fluid" src={chemistryLab} alt="Chemistry Laboratory Equipment"/>
-            <h3>Chemistry Laboratory Equipment</h3>
-          </div>
-          <div className="product-card">
-            <img className="img-fluid" src={chemLab} alt="Chemistry Laboratory Chemicals"/>
-            <h3>Chemistry Laboratory Chemicals</h3>
-          </div>
-          <div className="product-card">
+           <div className="product-card">
             <img className="img-fluid" src={bioLab} alt="Biology Laboratory Models "/>
             <h3>Biology Laboratory Models and Apparatus</h3>
           </div>
           <div className="product-card">
-            <img className="img-fluid" src={analytical} alt="Analytical Laboratory Equipment"/>
-            <h3>Analytical Laboratory Equipment</h3>
+            <img className="img-fluid" src={chemistryLab} alt="Chemistry Laboratory Equipment"/>
+            <h3>Chemistry Laboratory Chemicals & Equipment</h3>
+          </div>
+          <div className="product-card">
+            <img className="img-fluid" src={medical} alt="Chemistry Laboratory Chemicals"/>
+            <h3>Medical Supplies </h3>
+          </div>
+         
+          <div className="product-card">
+            <img className="img-fluid" src={agriculture} alt="Analytical Laboratory Equipment"/>
+            <h3>Analytical chemicals and Equipment</h3>
           </div>
         </div>
 
