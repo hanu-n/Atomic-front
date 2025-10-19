@@ -7,6 +7,8 @@ import debub from '../assets/payments/debub.jpg';
 import zemen from '../assets/payments/zemen.jpg';
 import dashen from '../assets/payments/dashen.png';
 import cbe from '../assets/payments/cbe.png';
+import boa from '../assets/payments/boa.jpg';
+import nib from '../assets/payments/nib.jpg';
 import '../assets/css/BankTransferPage.css'
 import { useNavigate } from 'react-router-dom';
 
@@ -39,32 +41,22 @@ const BankAccountsPage = () => {
       code: "BOA",
       accountNumber: "72627218",
       accountName: "Atomic Educational Materials Supply P.L.C",
-      logo: birhan,
+      logo: boa,
       color: "#e8ef0dff",
       gradient: "linear-gradient(135deg, #c9b411ff, #bdd61cff)"
     },
     {
       id: 4,
-      name: "Nib International Bank",
-      code: "NIB",
-      accountNumber: "2600160003769",
+     name: "Commercial Bank of Ethiopia",
+      code: "CBE",
+      accountNumber: "1000123456789",
       accountName: "Atomic Educational Materials Supply P.L.C",
-      logo: debub,
-      color: "#FF6B35",
-      gradient: "linear-gradient(135deg, #FF6B35, #FFA07A)"
+      logo: cbe,
+      color: "#073B4C",
+      gradient: "linear-gradient(135deg, #073B4C, #118AB2)"
     },
     {
       id: 5,
-      name: "Zemen Bank",
-      code: "ZEMEN",
-      accountNumber: "144110376159012",
-      accountName: "Atomic Educational Materials Supply P.L.C",
-      logo: zemen,
-      color: "#6A0572",
-      gradient: "linear-gradient(135deg, #6A0572, #9D4EDD)"
-    },
-    {
-      id: 6,
       name: "Dashen Bank",
       code: "DASHEN",
       accountNumber: "1252105861751",
@@ -74,14 +66,24 @@ const BankAccountsPage = () => {
       gradient: "linear-gradient(135deg, #118AB2, #06D6A0)"
     },
     {
-      id: 7,
-      name: "Commercial Bank of Ethiopia",
-      code: "CBE",
-      accountNumber: "1000123456789",
+      id: 6,
+      name: "Zemen Bank",
+      code: "ZEMEN",
+      accountNumber: "144110376159012",
       accountName: "Atomic Educational Materials Supply P.L.C",
-      logo: cbe,
-      color: "#073B4C",
-      gradient: "linear-gradient(135deg, #073B4C, #118AB2)"
+      logo: zemen,
+      color: "#6A0572",
+      gradient: "linear-gradient(135deg, #6A0572, #9D4EDD)"
+    },
+    {
+      id: 7,
+       name: "Nib International Bank",
+      code: "NIB",
+      accountNumber: "2600160003769",
+      accountName: "Atomic Educational Materials Supply P.L.C",
+      logo: nib,
+      color: "#FF6B35",
+      gradient: "linear-gradient(135deg, #FF6B35, #FFA07A)"
     }
   ];
 
