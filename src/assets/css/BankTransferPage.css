@@ -488,3 +488,29 @@
 .bank-account-card:nth-child(even) {
   animation-delay: 0.2s;
 }
+.bank-logos-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin: 2rem auto;
+}
+
+.bank-logo-item img {
+  height: 45px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 0 2px rgba(0,0,0,0.2));
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.bank-logo-item img:hover {
+  transform: scale(1.08);
+  filter: drop-shadow(0 0 6px rgba(0,0,0,0.3));
+}
+
+.hover-glow:hover {
+  transform: scale(1.05);
+  filter: drop-shadow(0 0 6px var(--bank-color));
+}
