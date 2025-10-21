@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate, useSearchParams, useLocation } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
+import { ADMIN_EMAILS } from "../config/adminConfig.js";
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -33,14 +34,15 @@ const Auth = () => {
     }
 
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      if (currentUser && currentUser.emailVerified) {
+      // still set the user object even if not emailVerified; we handle verification after login
+      if (currentUser) {
         setUser(currentUser);
       } else {
         setUser(null);
       }
     });
     return () => unsubscribe();
-  }, []);
+  }, [verified]);
 
   // 🔹 Register
   const handleRegister = async (e) => {
@@ -55,7 +57,7 @@ const Auth = () => {
       const userCred = await createUserWithEmailAndPassword(auth, email, password);
       const firebaseUser = userCred.user;
 
-      // Register in backend DB
+      // Register in backend DB (idempotent)
       await fetch("https://atomic-7jgw.onrender.com/api/users/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -88,35 +90,33 @@ const Auth = () => {
       const userCred = await signInWithEmailAndPassword(auth, email, password);
       const firebaseUser = userCred.user;
 
+      // Determine role locally
+      const role = ADMIN_EMAILS.includes(firebaseUser.email) ? "admin" : "customer";
 
-const token = await firebaseUser.getIdToken(); // get Firebase ID token
+      // Get Firebase ID token and store it (force refresh to avoid expired tokens)
+      const token = await firebaseUser.getIdToken(true);
+      localStorage.setItem("token", token);
 
-await fetch(`https://atomic-7jgw.onrender.com/api/users/set-role/${firebaseUser.uid}`, {
-  method: "PUT",
-  headers: { 
-    "Content-Type": "application/json",
-    "Authorization": `Bearer ${token}` // send token
-  },
-  body: JSON.stringify({ role }),
-});
-
-
-localStorage.setItem("role", role);
-localStorage.setItem("email", firebaseUser.email);
-
-
-
-      // Redirect to previous page if available, unless admin
-      if (role === "admin") {
-        navigate("/admin");
-      } else {
-        const from = location.state?.from?.pathname || "/";
-        navigate(from);
+      // Inform backend about role (protected endpoint)
+      try {
+        const resp = await fetch(`https://atomic-7jgw.onrender.com/api/users/set-role/${firebaseUser.uid}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+          body: JSON.stringify({ role }),
+        });
+        if (!resp.ok) {
+          const text = await resp.text();
+          console.error('set-role failed', resp.status, text);
+          toast.warn('Warning: could not set role on backend (see console)');
+        }
+      } catch (err) {
+        console.error('Error calling set-role:', err);
       }
- 
-  
 
-      // Check backend if verified
+      // Check backend verification status BEFORE redirecting
       const res = await fetch(`https://atomic-7jgw.onrender.com/api/users/is-verified/${firebaseUser.uid}`);
       const { isVerified } = await res.json();
 
@@ -128,13 +128,24 @@ localStorage.setItem("email", firebaseUser.email);
         return;
       }
 
-  toast.success("Login successful!");
+      localStorage.setItem("role", role);
+      localStorage.setItem("email", firebaseUser.email);
+
+      toast.success("Login successful!");
+
+      // Redirect accordingly
+      if (role === "admin") {
+        navigate("/admin");
+      } else {
+        const from = location.state?.from?.pathname || "/";
+        navigate(from);
+      }
     } catch (error) {
-        console.error("Login failed:", error.code, error.message);
+      console.error("Login failed:", error);
       toast.error("Login failed. Please check your credentials.");
-     
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   // 🔹 Google sign-in
@@ -144,7 +155,7 @@ localStorage.setItem("email", firebaseUser.email);
       const result = await signInWithPopup(auth, googleProvider);
       const firebaseUser = result.user;
 
-      // Register in backend DB
+      // Register in backend DB (idempotent)
       await fetch("https://atomic-7jgw.onrender.com/api/users/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -155,12 +166,42 @@ localStorage.setItem("email", firebaseUser.email);
         }),
       });
 
+      // Determine role and set it on backend
+      const role = ADMIN_EMAILS.includes(firebaseUser.email) ? "admin" : "customer";
+      const token = await firebaseUser.getIdToken(true);
+      localStorage.setItem("token", token);
+      try {
+        const resp = await fetch(`https://atomic-7jgw.onrender.com/api/users/set-role/${firebaseUser.uid}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+          body: JSON.stringify({ role }),
+        });
+        if (!resp.ok) {
+          const text = await resp.text();
+          console.error('set-role failed', resp.status, text);
+          toast.warn('Warning: could not set role on backend (see console)');
+        }
+      } catch (err) {
+        console.error('Error calling set-role:', err);
+      }
+
+      localStorage.setItem("role", role);
+      localStorage.setItem("email", firebaseUser.email);
+
+      // Redirect based on role
+      if (role === "admin") navigate("/admin");
+      else navigate("/");
+
       toast.success("Signed in with Google!");
-      navigate("/");
     } catch (error) {
+      console.error("Google sign-in failed:", error);
       toast.error(error.message || "Google sign-in failed.");
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   const handleLogout = async () => {
