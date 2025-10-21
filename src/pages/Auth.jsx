@@ -56,7 +56,7 @@ const Auth = () => {
       const firebaseUser = userCred.user;
 
       // Register in backend DB
-      await fetch("http://localhost:5000/api/users/register", {
+      await fetch("https://atomic-7jgw.onrender.com/api/users/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -91,7 +91,7 @@ const Auth = () => {
 
 const token = await firebaseUser.getIdToken(); // get Firebase ID token
 
-await fetch(`http://localhost:5000/api/users/set-role/${firebaseUser.uid}`, {
+await fetch(`https://atomic-7jgw.onrender.com/api/users/set-role/${firebaseUser.uid}`, {
   method: "PUT",
   headers: { 
     "Content-Type": "application/json",
@@ -117,7 +117,7 @@ localStorage.setItem("email", firebaseUser.email);
   
 
       // Check backend if verified
-      const res = await fetch(`http://localhost:5000/api/users/is-verified/${firebaseUser.uid}`);
+      const res = await fetch(`https://atomic-7jgw.onrender.com/api/users/is-verified/${firebaseUser.uid}`);
       const { isVerified } = await res.json();
 
       if (!isVerified) {
@@ -145,7 +145,7 @@ localStorage.setItem("email", firebaseUser.email);
       const firebaseUser = result.user;
 
       // Register in backend DB
-      await fetch("http://localhost:5000/api/users/register", {
+      await fetch("https://atomic-7jgw.onrender.com/api/users/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

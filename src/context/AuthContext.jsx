@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
         });
         // Check backend verification status
         try {
-          const res = await fetch(`http://localhost:5000/api/users/is-verified/${firebaseUser.uid}`);
+          const res = await fetch(`https://atomic-7jgw.onrender.com/api/users/is-verified/${firebaseUser.uid}`);
           const data = await res.json();
           setIsVerified(!!data.isVerified);
         } catch (err) {
@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }) => {
       setCurrentUser({ ...auth.currentUser, token });
       // Check backend verification status
       try {
-        const res = await fetch(`http://localhost:5000/api/users/is-verified/${auth.currentUser.uid}`);
+        const res = await fetch(`https://atomic-7jgw.onrender.com/api/users/is-verified/${auth.currentUser.uid}`);
         const data = await res.json();
         setIsVerified(!!data.isVerified);
       } catch (err) {

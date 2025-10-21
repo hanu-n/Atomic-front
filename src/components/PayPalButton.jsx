@@ -14,7 +14,7 @@ const PayPalButton = ({ shippingInfo }) => {
       style={{ layout: 'vertical', color: 'blue', shape: 'rect' }}
       createOrder={async () => {
         try {
-          const res = await fetch('http://localhost:5000/api/payments/create-order', {
+          const res = await fetch('https://atomic-7jgw.onrender.com/api/payments/create-order', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ total: orderTotal }),
@@ -35,7 +35,7 @@ const PayPalButton = ({ shippingInfo }) => {
       }}
       onApprove={async (data) => {
         try {
-          const res = await fetch('http://localhost:5000/api/payments/capture-order', {
+          const res = await fetch('https://atomic-7jgw.onrender.com/api/payments/capture-order', {
             method: 'POST',
             headers: { 
               'Content-Type': 'application/json',

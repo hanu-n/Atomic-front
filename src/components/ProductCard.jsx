@@ -24,7 +24,7 @@ const ProductCard = ({ product }) => {
               product.image && (product.image.startsWith('http://') || product.image.startsWith('https://'))
                 ? product.image
                 : product.image
-                  ? `http://localhost:5000${product.image}`
+                  ? `https://atomic-7jgw.onrender.com${product.image}`
                   : '/placeholder.png'
             }
             alt={product.name}
