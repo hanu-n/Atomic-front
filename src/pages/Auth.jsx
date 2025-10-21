@@ -6,6 +6,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  getRedirectResult,
 } from "firebase/auth";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -43,6 +44,59 @@ const Auth = () => {
     });
     return () => unsubscribe();
   }, [verified]);
+
+  // Handle redirect result (used as a fallback when popup sign-in is blocked)
+  useEffect(() => {
+    const processRedirect = async () => {
+      try {
+        const result = await getRedirectResult(auth);
+        if (result && result.user) {
+          const firebaseUser = result.user;
+
+          // Register in backend DB (idempotent)
+          await fetch("https://atomic-7jgw.onrender.com/api/users/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              firebaseUID: firebaseUser.uid,
+              email: firebaseUser.email,
+              name: firebaseUser.displayName || "",
+            }),
+          });
+
+          const role = ADMIN_EMAILS.includes(firebaseUser.email) ? "admin" : "customer";
+          try {
+            const token = await firebaseUser.getIdToken(true);
+            localStorage.setItem("token", token);
+            const resp = await fetch(`https://atomic-7jgw.onrender.com/api/users/set-role/${firebaseUser.uid}`, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+              },
+              body: JSON.stringify({ role }),
+            });
+            if (!resp.ok) {
+              console.error('set-role (redirect) failed', resp.status, await resp.text());
+            }
+          } catch (tokenErr) {
+            console.error('Failed to get ID token after redirect sign-in:', tokenErr);
+          }
+
+          localStorage.setItem("role", role);
+          localStorage.setItem("email", firebaseUser.email);
+
+          if (role === "admin") navigate("/admin");
+          else navigate("/");
+        }
+      } catch (err) {
+        console.error('Error processing redirect sign-in result:', err);
+      }
+    };
+
+    processRedirect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // 🔹 Register
   const handleRegister = async (e) => {
@@ -152,7 +206,27 @@ const Auth = () => {
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
     try {
-      const result = await signInWithPopup(auth, googleProvider);
+      let result;
+      try {
+        // Try popup first (fast UX). In some production environments popups are blocked which
+        // causes auth/invalid-credential or popup-blocked-like errors. We'll catch and fallback.
+        result = await signInWithPopup(auth, googleProvider);
+      } catch (popupErr) {
+        console.warn("signInWithPopup failed, attempting redirect fallback:", popupErr);
+        // If popup fails (third-party cookies blocked, popup blocked), fall back to redirect.
+        // We don't await here because redirect will navigate away. Provide informative logging.
+        try {
+          // dynamic import to avoid bundle issues in some environments
+          const { signInWithRedirect } = await import("firebase/auth");
+          await signInWithRedirect(auth, googleProvider);
+          // Do not continue beyond this point; redirect will reload the app.
+          return;
+        } catch (redirectErr) {
+          console.error("signInWithRedirect also failed:", redirectErr);
+          throw redirectErr;
+        }
+      }
+
       const firebaseUser = result.user;
 
       // Register in backend DB (idempotent)
@@ -168,24 +242,35 @@ const Auth = () => {
 
       // Determine role and set it on backend
       const role = ADMIN_EMAILS.includes(firebaseUser.email) ? "admin" : "customer";
-      const token = await firebaseUser.getIdToken(true);
-      localStorage.setItem("token", token);
+
+      // Retrieve a fresh ID token and log debugging info to help diagnose invalid-credential in prod
       try {
-        const resp = await fetch(`https://atomic-7jgw.onrender.com/api/users/set-role/${firebaseUser.uid}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-          },
-          body: JSON.stringify({ role }),
-        });
-        if (!resp.ok) {
-          const text = await resp.text();
-          console.error('set-role failed', resp.status, text);
-          toast.warn('Warning: could not set role on backend (see console)');
+        const token = await firebaseUser.getIdToken(true);
+        console.debug("Google sign-in ID token retrieved, length:", token?.length);
+        localStorage.setItem("token", token);
+
+        try {
+          const resp = await fetch(`https://atomic-7jgw.onrender.com/api/users/set-role/${firebaseUser.uid}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`,
+            },
+            body: JSON.stringify({ role }),
+          });
+          if (!resp.ok) {
+            const text = await resp.text();
+            console.error('set-role failed', resp.status, text);
+            toast.warn('Warning: could not set role on backend (see console)');
+          } else {
+            console.debug('set-role succeeded', await resp.text());
+          }
+        } catch (err) {
+          console.error('Error calling set-role:', err);
         }
-      } catch (err) {
-        console.error('Error calling set-role:', err);
+      } catch (tokenErr) {
+        console.error('Failed to get ID token after Google sign-in:', tokenErr);
+        toast.warn('Signed in with Google locally but failed to obtain ID token for backend calls.');
       }
 
       localStorage.setItem("role", role);
