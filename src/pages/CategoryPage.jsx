@@ -17,21 +17,46 @@ const CategoryPage = () => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        let url = `/api/products?category=${categoryName}`;
-        
-        if (subCategoryName && subCategoryName !== "all") {
-          url += `&subCategory=${subCategoryName}`;
+
+        // Ensure we have categoryInfo so we can translate slugs to human-readable names
+        let localCategoryInfo = categoryInfo;
+        if (!localCategoryInfo) {
+          try {
+            const { data } = await axios.get(`https://atomic-7jgw.onrender.com/api/categories/${categoryName}`);
+            localCategoryInfo = data;
+            setCategoryInfo(data);
+          } catch (err) {
+            // If we can't fetch category info, continue using the slug as a fallback
+            console.warn('Could not fetch category info, using slug as fallback for queries', err);
+          }
         }
-        
-        if (subSubCategoryName && subSubCategoryName !== "all") {
-          url += `&subSubCategory=${subSubCategoryName}`;
+
+        // Map slugs to actual stored product category/subcategory names when possible
+        const categoryForQuery = localCategoryInfo?.name || categoryName;
+
+        let subCatForQuery = subCategoryName;
+        let subSubCatForQuery = subSubCategoryName;
+
+        if (localCategoryInfo && subCategoryName && subCategoryName !== 'all') {
+          const foundSub = localCategoryInfo.subCategories?.find((s) => s.slug === subCategoryName);
+          subCatForQuery = foundSub?.name || subCategoryName;
+
+          if (foundSub && subSubCategoryName && subSubCategoryName !== 'all') {
+            const foundSubSub = foundSub.subCategories?.find((ss) => ss.slug === subSubCategoryName);
+            subSubCatForQuery = foundSubSub?.name || subSubCategoryName;
+          }
         }
-        
-        console.log("Fetching products from:", url);
+
+        // Build query string using the resolved names
+        let url = `https://atomic-7jgw.onrender.com/api/products?category=${encodeURIComponent(categoryForQuery)}`;
+        if (subCatForQuery && subCatForQuery !== 'all') url += `&subCategory=${encodeURIComponent(subCatForQuery)}`;
+        if (subSubCatForQuery && subSubCatForQuery !== 'all') url += `&subSubCategory=${encodeURIComponent(subSubCatForQuery)}`;
+
+        console.log('Fetching products from:', url, { categoryForQuery, subCatForQuery, subSubCatForQuery });
         const { data } = await axios.get(url);
         setProducts(Array.isArray(data) ? data : []);
       } catch (error) {
-        console.error("Error fetching products:", error);
+        console.error('Error fetching products:', error);
         setProducts([]);
       } finally {
         setLoading(false);
@@ -43,13 +68,13 @@ const CategoryPage = () => {
         const { data } = await axios.get(`https://atomic-7jgw.onrender.com/api/categories/${categoryName}`);
         setCategoryInfo(data);
       } catch (error) {
-        console.error("Error fetching category info:", error);
+        console.error('Error fetching category info:', error);
       }
     };
 
     if (categoryName) {
-      fetchProducts();
-      fetchCategoryInfo();
+      // Fetch category info first so we can translate slugs when fetching products
+      fetchCategoryInfo().then(() => fetchProducts());
     }
   }, [categoryName, subCategoryName, subSubCategoryName]);
 
