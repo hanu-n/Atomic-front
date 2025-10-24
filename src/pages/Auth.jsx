@@ -142,7 +142,7 @@ const Auth = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const userCred = await signInWithEmailAndPassword(auth, trimmedEmail, password);
+      const userCred = await signInWithEmailAndPassword(auth, trimmedEmail  , password);
       const firebaseUser = userCred.user;
 
       // Determine role locally
