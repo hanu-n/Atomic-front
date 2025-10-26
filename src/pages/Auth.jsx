@@ -316,9 +316,7 @@ const Auth = () => {
           )}
         </p>
 
-        <button onClick={handleLogout} className="btn btn-outline-danger w-100 mt-3">
-          Logout
-        </button>
+      
       </div>
     </div>
   );

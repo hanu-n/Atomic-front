@@ -73,7 +73,7 @@ const App = () => {
 
             {/* Admin Routes */}
             <Route path="/admin/orders" element={<OrderList />} />
-            <Route path="/admin" element={<PrivateAdminRoute><AdminDashboard /></PrivateAdminRoute>} />
+            <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/pro-list" element={<ProductList2 />} />
 
             {/* Other Routes */}
