@@ -383,7 +383,7 @@ try {
           </button>
 
           <p className="mt-3 text-center">
-            {isLogin ? (
+            {isLogin || isLoading ? (
               <>Don’t have an account? <span className="text-primary" style={{cursor:"pointer"}} onClick={() => setIsLogin(false)}>Register</span></>
             ) : (
               <>Already have an account? <span className="text-primary" style={{cursor:"pointer"}} onClick={() => setIsLogin(true)}>Login</span></>
