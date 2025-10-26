@@ -11,7 +11,7 @@ import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDmWCAszsxLixP8ALNjyCBc7tGCjuTNcXc",
-  authDomain: "clone-fd7d9.firebaseapp.com",
+  authDomain: "atomicmas.netlify.app",
   projectId: "clone-fd7d9",
   storageBucket: "clone-fd7d9.firebasestorage.app",
   messagingSenderId: "544508751843",

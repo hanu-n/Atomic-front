@@ -12,7 +12,9 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate, useSearchParams, useLocation } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
-import { ADMIN_EMAILS } from "../config/adminConfig.js";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../firebase";
+
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -146,7 +148,17 @@ const Auth = () => {
       const firebaseUser = userCred.user;
 
       // Determine role locally
-      const role = ADMIN_EMAILS.includes(firebaseUser.email) ? "admin" : "customer";
+let role = "customer";
+
+try {
+  // Check if the email exists in the 'admins' collection
+  const adminDoc = await getDoc(doc(db, "admins", firebaseUser.email));
+  if (adminDoc.exists()) {
+    role = "admin";
+  }
+} catch (err) {
+  console.error("Error checking admin role:", err);
+}
 
       // Get Firebase ID token and store it (force refresh to avoid expired tokens)
       const token = await firebaseUser.getIdToken(true);
