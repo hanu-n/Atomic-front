@@ -29,6 +29,7 @@ const Auth = () => {
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [authProcessing, setAuthProcessing] = useState(false);
 
   useEffect(() => {
     // Show success message if coming from email verification
@@ -107,8 +108,8 @@ const Auth = () => {
       toast.error("You must agree to the Terms and Privacy Policy.");
       return;
     }
-
     setIsLoading(true);
+    setAuthProcessing(true);
     try {
       const userCred = await createUserWithEmailAndPassword(auth, email, password);
       const firebaseUser = userCred.user;
@@ -136,6 +137,7 @@ const Auth = () => {
       toast.error(message);
     }
     setIsLoading(false);
+    setAuthProcessing(false);
   };
 
   // 🔹 Login
@@ -143,6 +145,7 @@ const Auth = () => {
     const trimmedEmail = email.trim();
     e.preventDefault();
     setIsLoading(true);
+    setAuthProcessing(true);
     try {
       const userCred = await signInWithEmailAndPassword(auth, trimmedEmail  , password);
       const firebaseUser = userCred.user;
@@ -212,12 +215,14 @@ try {
       toast.error("Login failed. Please check your credentials.");
     } finally {
       setIsLoading(false);
+      setAuthProcessing(false);
     }
   };
 
   // 🔹 Google sign-in
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
+    setAuthProcessing(true);
     try {
       let result;
       try {
@@ -299,6 +304,7 @@ try {
       toast.error(error.message || "Google sign-in failed.");
     } finally {
       setIsLoading(false);
+      setAuthProcessing(false);
     }
   };
 
