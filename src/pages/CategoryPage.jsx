@@ -1,127 +1,65 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useCart } from "../context/CartContext";
-import { useParams,Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import ContextualLoader from "../components/loader/ContextualLoader";
-
 
 const CategoryPage = () => {
   const { categoryName, subCategoryName, subSubCategoryName } = useParams();
   const { dispatch } = useCart();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [categoryInfo, setCategoryInfo] = useState(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
 
-        // Ensure we have categoryInfo so we can translate slugs to human-readable names
-        let localCategoryInfo = categoryInfo;
-        if (!localCategoryInfo) {
-          try {
-            const { data } = await axios.get(`https://atomic-7jgw.onrender.com/api/categories/${categoryName}`);
-            localCategoryInfo = data;
-            setCategoryInfo(data);
-          } catch (err) {
-            // If we can't fetch category info, continue using the slug as a fallback
-            console.warn('Could not fetch category info, using slug as fallback for queries', err);
-          }
-        }
+        // Convert slugs like "school-equipment" -> "school equipment"
+        const categoryForQuery = categoryName?.replace(/-/g, " ") || "";
+        const subCatForQuery = subCategoryName?.replace(/-/g, " ") || "";
+        const subSubCatForQuery = subSubCategoryName?.replace(/-/g, " ") || "";
 
-        // Map slugs to actual stored product category/subcategory names when possible
-        const categoryForQuery = localCategoryInfo?.name || categoryName;
-
-        let subCatForQuery = subCategoryName;
-        let subSubCatForQuery = subSubCategoryName;
-
-        if (localCategoryInfo && subCategoryName && subCategoryName !== 'all') {
-          const foundSub = localCategoryInfo.subCategories?.find((s) => s.slug === subCategoryName);
-          subCatForQuery = foundSub?.name || subCategoryName;
-
-          if (foundSub && subSubCategoryName && subSubCategoryName !== 'all') {
-            const foundSubSub = foundSub.subCategories?.find((ss) => ss.slug === subSubCategoryName);
-            subSubCatForQuery = foundSubSub?.name || subSubCategoryName;
-          }
-        }
-
-        // Build query string using the resolved names
+        // Build query string
         let url = `https://atomic-7jgw.onrender.com/api/products?category=${encodeURIComponent(categoryForQuery)}`;
-        if (subCatForQuery && subCatForQuery !== 'all') url += `&subCategory=${encodeURIComponent(subCatForQuery)}`;
-        if (subSubCatForQuery && subSubCatForQuery !== 'all') url += `&subSubCategory=${encodeURIComponent(subSubCatForQuery)}`;
+        if (subCatForQuery && subCatForQuery !== "all")
+          url += `&subCategory=${encodeURIComponent(subCatForQuery)}`;
+        if (subSubCatForQuery && subSubCatForQuery !== "all")
+          url += `&subSubCategory=${encodeURIComponent(subSubCatForQuery)}`;
 
-        console.log('Fetching products from:', url, { categoryForQuery, subCatForQuery, subSubCatForQuery });
+        console.log("Fetching products from:", url);
         const { data } = await axios.get(url);
-        setProducts(Array.isArray(data) ? data : []);
+
+        if (Array.isArray(data)) {
+          setProducts(data);
+        } else {
+          console.warn("Unexpected response:", data);
+          setProducts([]);
+        }
       } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error("❌ Error fetching products:", error);
+        toast.error("Failed to load products.");
         setProducts([]);
       } finally {
         setLoading(false);
       }
     };
 
-    const fetchCategoryInfo = async () => {
-      try {
-        const { data } = await axios.get(`https://atomic-7jgw.onrender.com/api/categories/${categoryName}`);
-        setCategoryInfo(data);
-      } catch (error) {
-        console.error('Error fetching category info:', error);
-      }
-    };
-
-    if (categoryName) {
-      // Fetch category info first so we can translate slugs when fetching products
-      fetchCategoryInfo().then(() => fetchProducts());
-    }
+    if (categoryName) fetchProducts();
   }, [categoryName, subCategoryName, subSubCategoryName]);
 
   const getPageTitle = () => {
-    if (subSubCategoryName) {
-      return `${subSubCategoryName.replace(/-/g, " ")} (${subCategoryName.replace(/-/g, " ")})`;
-    } else if (subCategoryName) {
-      return `${subCategoryName.replace(/-/g, " ")} (${categoryName.replace(/-/g, " ")})`;
-    } else {
-      return categoryName.replace(/-/g, " ");
-    }
-  };
-
-  const getBreadcrumb = () => {
-    const breadcrumbs = [
-      { name: "Home", path: "/" },
-      { name: categoryInfo?.name || categoryName.replace(/-/g, " "),
-        //  path: `/category/${categoryName}`
-        path: `/products/category/${categoryName}`
- }
-    ];
-
-    if (subCategoryName && subCategoryName !== "all") {
-      const subCategory = categoryInfo?.subCategories?.find(sub => sub.slug === subCategoryName);
-      breadcrumbs.push({
-        name: subCategory?.name || subCategoryName.replace(/-/g, " "),
-        // path: `/category/${categoryName}/${subCategoryName}`
-        path: `/products/category/${categoryName}/${subCategoryName}`
-
-      });
-    }
-
-    if (subSubCategoryName && subSubCategoryName !== "all") {
-      breadcrumbs.push({
-        name: subSubCategoryName.replace(/-/g, " "),
-        path: `/products/category/${categoryName}/${subCategoryName}/${subSubCategoryName}`
-
-        // path: `/category/${categoryName}/${subCategoryName}/${subSubCategoryName}`
-      });
-    }
-
-    return breadcrumbs;
+    if (subSubCategoryName)
+      return `${subSubCategoryName.replace(/-/g, " ")} (${subCategoryName?.replace(/-/g, " ")})`;
+    if (subCategoryName)
+      return `${subCategoryName.replace(/-/g, " ")} (${categoryName?.replace(/-/g, " ")})`;
+    return categoryName?.replace(/-/g, " ");
   };
 
   if (loading) {
     return (
-      <div className="container py-5 d-flex justify-content-center align-items-center" style={{ minHeight: '400px' }}>
+      <div className="container py-5 d-flex justify-content-center align-items-center" style={{ minHeight: "400px" }}>
         <ContextualLoader category={categoryName} size="medium" />
       </div>
     );
@@ -129,56 +67,23 @@ const CategoryPage = () => {
 
   return (
     <div className="container py-4">
-      {/* Breadcrumb */}
-      <nav aria-label="breadcrumb" className="mb-4">
-        <ol className="breadcrumb">
-          {getBreadcrumb().map((breadcrumb, index) => (
-            <li key={index} className={`breadcrumb-item ${index === getBreadcrumb().length - 1 ? 'active' : ''}`}>
-              {index === getBreadcrumb().length - 1 ? (
-                breadcrumb.name
-              ) : (
-                <a href={breadcrumb.path} className="text-decoration-none">
-                  {breadcrumb.name}
-                </a>
-              )}
-            </li>
-          ))}
-        </ol>
-      </nav>
+      <h2 className="mb-4 text-success">{getPageTitle().toUpperCase()}</h2>
 
-      {/* Page Title */}
-      <h2 className="mb-4 text-success">
-        {getPageTitle().toUpperCase()}
-      </h2>
-
-      {/* Products Count */}
       <p className="text-muted mb-4">
-        {products.length} product{products.length !== 1 ? 's' : ''} found
+        {products.length} product{products.length !== 1 ? "s" : ""} found
       </p>
 
-      {/* Products Grid */}
       <div className="row">
         {products.length > 0 ? (
           products.map((p) => (
             <div key={p._id} className="col-md-4 mb-4">
               <div className="card shadow-sm h-100">
-                <Link 
-                  to={`/products/${p._id}`} 
-                  className="text-decoration-none text-dark"
-                  style={{ cursor: "pointer" }}
-                >
-                  <img 
-                    src={p.image} 
-                    className="card-img-top" 
-                    alt={p.name}
-                    style={{ height: "200px", objectFit: "cover" }}
-                  />
+                <Link to={`/products/${p._id}`} className="text-decoration-none text-dark" style={{ cursor: "pointer" }}>
+                  <img src={p.image} className="card-img-top" alt={p.name} style={{ height: "200px", objectFit: "cover" }} />
                 </Link>
                 <div className="card-body d-flex flex-column">
                   <h5 className="card-title">{p.name}</h5>
-                  <p className="card-text text-muted">
-                    {p.description || "No description available"}
-                  </p>
+                  <p className="card-text text-muted">{p.description || "No description available"}</p>
                   <div className="mt-auto">
                     <p className="card-text">
                       <strong className="text-success">etb-{p.price}</strong>
@@ -201,14 +106,10 @@ const CategoryPage = () => {
             </div>
           ))
         ) : (
-          <div className="col-12 text-center">
-            <div className="py-5">
-              <i className="fas fa-search fa-3x text-muted mb-3"></i>
-              <h4 className="text-muted">No products found</h4>
-              <p className="text-muted">
-                No products found in this category. Please try a different selection.
-              </p>
-            </div>
+          <div className="col-12 text-center py-5">
+            <i className="fas fa-search fa-3x text-muted mb-3"></i>
+            <h4 className="text-muted">No products found</h4>
+            <p className="text-muted">Try a different category or check again later.</p>
           </div>
         )}
       </div>
