@@ -22,14 +22,27 @@ const CategoryPage = () => {
         const subSubCatForQuery = subSubCategoryName?.replace(/-/g, " ") || "";
 
         // Build query string
-        let url = `https://atomic-7jgw.onrender.com/api/products?category=${encodeURIComponent(categoryForQuery)}`;
-        if (subCatForQuery && subCatForQuery !== "all")
-          url += `&subCategory=${encodeURIComponent(subCatForQuery)}`;
-        if (subSubCatForQuery && subSubCatForQuery !== "all")
-          url += `&subSubCategory=${encodeURIComponent(subSubCatForQuery)}`;
+        // --- Fix: ensure correct case and spacing ---
+const toTitleCase = (str) =>
+  str
+    ? str
+        .replace(/-/g, " ")             // convert slug to spaced words
+        .replace(/\b\w/g, (c) => c.toUpperCase()) // capitalize each word
+    : "";
 
-        console.log("Fetching products from:", url);
-        alert(`Fetching from:\n${url}`);
+const finalCategory = toTitleCase(categoryForQuery);
+const finalSubCategory = toTitleCase(subCatForQuery);
+const finalSubSubCategory = toTitleCase(subSubCatForQuery);
+
+// Build the final query using corrected names
+let url = `https://atomic-7jgw.onrender.com/api/products?category=${encodeURIComponent(finalCategory)}`;
+if (subCatForQuery && subCatForQuery !== 'all')
+  url += `&subCategory=${encodeURIComponent(finalSubCategory)}`;
+if (subSubCatForQuery && subSubCatForQuery !== 'all')
+  url += `&subSubCategory=${encodeURIComponent(finalSubSubCategory)}`;
+
+console.log("🔍 Final query URL:", url);
+
 
         const { data } = await axios.get(url);
 
