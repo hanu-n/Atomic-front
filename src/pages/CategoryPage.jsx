@@ -29,6 +29,8 @@ const CategoryPage = () => {
           url += `&subSubCategory=${encodeURIComponent(subSubCatForQuery)}`;
 
         console.log("Fetching products from:", url);
+        alert(`Fetching from:\n${url}`);
+
         const { data } = await axios.get(url);
 
         if (Array.isArray(data)) {
