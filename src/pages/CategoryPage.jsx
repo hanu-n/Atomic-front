@@ -16,41 +16,51 @@ const CategoryPage = () => {
       try {
         setLoading(true);
 
-        // Convert slugs like "school-equipment" -> "school equipment"
+        // 🧹 Normalize slugs like "school-equipment" → "school equipment"
         const categoryForQuery = categoryName?.replace(/-/g, " ") || "";
         const subCatForQuery = subCategoryName?.replace(/-/g, " ") || "";
         const subSubCatForQuery = subSubCategoryName?.replace(/-/g, " ") || "";
 
-        // Build query string
-        // --- Fix: ensure correct case and spacing ---
-const toTitleCase = (str) =>
-  str
-    ? str
-        .replace(/-/g, " ")             // convert slug to spaced words
-        .replace(/\b\w/g, (c) => c.toUpperCase()) // capitalize each word
-    : "";
+        // 🧠 Convert to Title Case for better matching
+        const toTitleCase = (str) =>
+          str
+            ? str
+                .toLowerCase()
+                .replace(/(^\w|\s\w)/g, (c) => c.toUpperCase())
+                .trim()
+            : "";
 
-const finalCategory = toTitleCase(categoryForQuery);
-const finalSubCategory = toTitleCase(subCatForQuery);
-const finalSubSubCategory = toTitleCase(subSubCatForQuery);
+        const finalCategory = toTitleCase(categoryForQuery);
+        const finalSubCategory = toTitleCase(subCatForQuery);
+        const finalSubSubCategory = toTitleCase(subSubCatForQuery);
 
-// Build the final query using corrected names
-let url = `https://atomic-7jgw.onrender.com/api/products?category=${encodeURIComponent(finalCategory)}`;
-if (subCatForQuery && subCatForQuery !== 'all')
-  url += `&subCategory=${encodeURIComponent(finalSubCategory)}`;
-if (subSubCatForQuery && subSubCatForQuery !== 'all')
-  url += `&subSubCategory=${encodeURIComponent(finalSubSubCategory)}`;
+        // 🌐 Build final API URL
+        let url = `https://atomic-7jgw.onrender.com/api/products?category=${encodeURIComponent(finalCategory)}`;
+        if (subCatForQuery && subCatForQuery !== "all")
+          url += `&subCategory=${encodeURIComponent(finalSubCategory)}`;
+        if (subSubCatForQuery && subSubCatForQuery !== "all")
+          url += `&subSubCategory=${encodeURIComponent(finalSubSubCategory)}`;
 
-console.log("🔍 Final query URL:", url);
-
+        console.log("🔍 Final query URL:", url);
 
         const { data } = await axios.get(url);
 
+        // ✅ Ensure valid array response
         if (Array.isArray(data)) {
           setProducts(data);
         } else {
-          console.warn("Unexpected response:", data);
+          console.warn("Unexpected response format:", data);
           setProducts([]);
+        }
+
+        // 🪄 Optional fallback: If no products, refetch without case formatting
+        if (data.length === 0 && categoryName) {
+          console.log("⚠️ Empty result — retrying with lowercase fallback");
+          const fallbackUrl = `https://atomic-7jgw.onrender.com/api/products?category=${encodeURIComponent(
+            categoryForQuery.toLowerCase()
+          )}`;
+          const { data: retry } = await axios.get(fallbackUrl);
+          if (Array.isArray(retry)) setProducts(retry);
         }
       } catch (error) {
         console.error("❌ Error fetching products:", error);
@@ -74,7 +84,10 @@ console.log("🔍 Final query URL:", url);
 
   if (loading) {
     return (
-      <div className="container py-5 d-flex justify-content-center align-items-center" style={{ minHeight: "400px" }}>
+      <div
+        className="container py-5 d-flex justify-content-center align-items-center"
+        style={{ minHeight: "400px" }}
+      >
         <ContextualLoader category={categoryName} size="medium" />
       </div>
     );
@@ -93,15 +106,26 @@ console.log("🔍 Final query URL:", url);
           products.map((p) => (
             <div key={p._id} className="col-md-4 mb-4">
               <div className="card shadow-sm h-100">
-                <Link to={`/products/${p._id}`} className="text-decoration-none text-dark" style={{ cursor: "pointer" }}>
-                  <img src={p.image} className="card-img-top" alt={p.name} style={{ height: "200px", objectFit: "cover" }} />
+                <Link
+                  to={`/products/${p._id}`}
+                  className="text-decoration-none text-dark"
+                  style={{ cursor: "pointer" }}
+                >
+                  <img
+                    src={p.image}
+                    className="card-img-top"
+                    alt={p.name}
+                    style={{ height: "200px", objectFit: "cover" }}
+                  />
                 </Link>
                 <div className="card-body d-flex flex-column">
                   <h5 className="card-title">{p.name}</h5>
-                  <p className="card-text text-muted">{p.description || "No description available"}</p>
+                  <p className="card-text text-muted">
+                    {p.description || "No description available"}
+                  </p>
                   <div className="mt-auto">
                     <p className="card-text">
-                      <strong className="text-success">etb-{p.price}</strong>
+                      <strong className="text-success">ETB {p.price}</strong>
                     </p>
                     <button
                       className="btn btn-success btn-sm w-100 mb-2"
@@ -112,7 +136,10 @@ console.log("🔍 Final query URL:", url);
                     >
                       Add to Cart
                     </button>
-                    <Link to={`/products/${p._id}`} className="btn btn-primary btn-sm w-100">
+                    <Link
+                      to={`/products/${p._id}`}
+                      className="btn btn-primary btn-sm w-100"
+                    >
                       View Details
                     </Link>
                   </div>
@@ -124,7 +151,9 @@ console.log("🔍 Final query URL:", url);
           <div className="col-12 text-center py-5">
             <i className="fas fa-search fa-3x text-muted mb-3"></i>
             <h4 className="text-muted">No products found</h4>
-            <p className="text-muted">Try a different category or check again later.</p>
+            <p className="text-muted">
+              Try a different category or check again later.
+            </p>
           </div>
         )}
       </div>
@@ -133,3 +162,4 @@ console.log("🔍 Final query URL:", url);
 };
 
 export default CategoryPage;
+
