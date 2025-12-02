@@ -34,9 +34,10 @@ const CategoryPage = () => {
         // const finalSubCategory = toTitleCase(subCatForQuery);
         // const finalSubSubCategory = toTitleCase(subSubCatForQuery);
  // 🔧 FIX: Use lowercase for consistent API matching
-const finalCategory = categoryForQuery.toLowerCase();
-const finalSubCategory = subCatForQuery?.toLowerCase() || "";
-const finalSubSubCategory = subSubCatForQuery?.toLowerCase() || "";
+// In CategoryPage.jsx, replace lines 25-35 with:
+const finalCategory = categoryForQuery.replace(/ /g, "-").toLowerCase();
+const finalSubCategory = subCatForQuery?.replace(/ /g, "-").toLowerCase() || "";
+const finalSubSubCategory = subSubCatForQuery?.replace(/ /g, "-").toLowerCase() || "";
         // 🌐 Build final API URL
         let url = `https://atomic-7jgw.onrender.com/api/products?category=${encodeURIComponent(finalCategory)}`;
         if (subCatForQuery && subCatForQuery !== "all")
@@ -75,12 +76,6 @@ const finalSubSubCategory = subSubCatForQuery?.toLowerCase() || "";
     if (categoryName) fetchProducts();
   }, [categoryName, subCategoryName, subSubCategoryName]);
 
-  console.log("🔍 DEBUG =================");
-console.log("Category from URL:", categoryName);
-console.log("SubCategory from URL:", subCategoryName); 
-console.log("SubSubCategory from URL:", subSubCategoryName);
-console.log("Final API URL:", url);
-console.log("==========================");
   const getPageTitle = () => {
     if (subSubCategoryName)
       return `${subSubCategoryName.replace(/-/g, " ")} (${subCategoryName?.replace(/-/g, " ")})`;
