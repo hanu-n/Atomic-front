@@ -44,8 +44,6 @@ const finalSubSubCategory = subSubCatForQuery?.toLowerCase() || "";
         if (subSubCatForQuery && subSubCatForQuery !== "all")
           url += `&subSubCategory=${encodeURIComponent(finalSubSubCategory)}`;
 
-        console.log("🔍 Final query URL:", url);
-
         const { data } = await axios.get(url);
 
         // ✅ Ensure valid array response
@@ -77,6 +75,12 @@ const finalSubSubCategory = subSubCatForQuery?.toLowerCase() || "";
     if (categoryName) fetchProducts();
   }, [categoryName, subCategoryName, subSubCategoryName]);
 
+  console.log("🔍 DEBUG =================");
+console.log("Category from URL:", categoryName);
+console.log("SubCategory from URL:", subCategoryName); 
+console.log("SubSubCategory from URL:", subSubCategoryName);
+console.log("Final API URL:", url);
+console.log("==========================");
   const getPageTitle = () => {
     if (subSubCategoryName)
       return `${subSubCategoryName.replace(/-/g, " ")} (${subCategoryName?.replace(/-/g, " ")})`;
