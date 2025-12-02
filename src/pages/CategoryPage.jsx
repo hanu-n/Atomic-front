@@ -21,19 +21,22 @@ const CategoryPage = () => {
         const subCatForQuery = subCategoryName?.replace(/-/g, " ") || "";
         const subSubCatForQuery = subSubCategoryName?.replace(/-/g, " ") || "";
 
-        // 🧠 Convert to Title Case for better matching
-        const toTitleCase = (str) =>
-          str
-            ? str
-                .toLowerCase()
-                .replace(/(^\w|\s\w)/g, (c) => c.toUpperCase())
-                .trim()
-            : "";
+        // // 🧠 Convert to Title Case for better matching
+        // const toTitleCase = (str) =>
+        //   str
+        //     ? str
+        //         .toLowerCase()
+        //         .replace(/(^\w|\s\w)/g, (c) => c.toUpperCase())
+        //         .trim()
+        //     : "";
 
-        const finalCategory = toTitleCase(categoryForQuery);
-        const finalSubCategory = toTitleCase(subCatForQuery);
-        const finalSubSubCategory = toTitleCase(subSubCatForQuery);
-
+        // const finalCategory = toTitleCase(categoryForQuery);
+        // const finalSubCategory = toTitleCase(subCatForQuery);
+        // const finalSubSubCategory = toTitleCase(subSubCatForQuery);
+ // 🔧 FIX: Use lowercase for consistent API matching
+const finalCategory = categoryForQuery.toLowerCase();
+const finalSubCategory = subCatForQuery?.toLowerCase() || "";
+const finalSubSubCategory = subSubCatForQuery?.toLowerCase() || "";
         // 🌐 Build final API URL
         let url = `https://atomic-7jgw.onrender.com/api/products?category=${encodeURIComponent(finalCategory)}`;
         if (subCatForQuery && subCatForQuery !== "all")
