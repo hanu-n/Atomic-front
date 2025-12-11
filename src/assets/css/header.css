@@ -277,6 +277,7 @@
   font-size: 0.85rem;
   color: #2C5364;
   animation: fadeDrop 0.25s ease;
+  cursor: pointer;
 }
 
 @keyframes fadeDrop {
